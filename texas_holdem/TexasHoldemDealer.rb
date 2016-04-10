@@ -76,9 +76,10 @@ class TexasHoldemDealer
 
 		player_number = 1
 		players.each do |player|
-			puts "Player #{player_number}: #{player.hand}"
+			puts "Player #{player_number}: #{player.get_hand}"
 			player_number += 1
 		end
+		puts "Table: #{table}"
 		sleep(2)
 
 	end
@@ -108,6 +109,7 @@ game = TexasHoldemDealer.new([], [Player.new, Computer.new, Computer.new, Comput
 	game.the_river
 	puts "Goodbye!"
 	#game.play_again ?  next : break
+	#game.new_round #reset what needs to be reset here
 #end
 
 
