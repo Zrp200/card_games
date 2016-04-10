@@ -72,6 +72,7 @@ class TexasHoldemDealer
 
 	end
 
+	#MOVE THIS INTO ITS OWN CLASS SOON; USE CLASS METHODS?
 	def display_cards
 
 		player_number = 1
@@ -84,16 +85,13 @@ class TexasHoldemDealer
 
 	end
 
-	def get_hand(player)
-
-		#puts player.get_hand
-
-	end
-
+	#SHOULD THE DEALER CONTROL THIS OR SHOULD I MAKE A SEPARATE 'HOUSE RULES'
+	#CLASS THAT KEEPS TRACK OF BETTING LIMITS ETC.
 	def bet
 
 	end
 
+	#CARD EVALUATOR SHOULD BE ITS OWN CLASS...OR A MODULE
 	def determine_winner
 
 	end
