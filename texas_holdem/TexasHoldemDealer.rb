@@ -1,7 +1,7 @@
 require '/Users/hayshopkins/Desktop/ruby_projects/card_games/Cards.rb'
 require '/Users/hayshopkins/Desktop/ruby_projects/card_games/texas_holdem/Player.rb'
 require '/Users/hayshopkins/Desktop/ruby_projects/card_games/texas_holdem/Computer.rb'
-require 'net/http'
+
 
 class TexasHoldemDealer
 	include Cards
@@ -100,12 +100,17 @@ end
 game = TexasHoldemDealer.new([], [Player.new, Computer.new, Computer.new, Computer.new])
 
 #while true
-	game.play_game
-	game.hole_cards
-	game.the_flop
-	game.the_turn
-	game.the_river
-	puts "Goodbye!"
+deck = game.play_game
+
+deck.each do |card|
+	face, suit = card.split('')
+	puts "#{card}: #{Cards::FACE_VALUES[face]}, #{Cards::SUIT_VALUES[suit]}"
+end
+	#game.hole_cards
+	#game.the_flop
+	#game.the_turn
+	#game.the_river
+	#puts "Goodbye!"
 	#game.play_again ?  next : break
 	#game.new_round #reset what needs to be reset here
 #end
