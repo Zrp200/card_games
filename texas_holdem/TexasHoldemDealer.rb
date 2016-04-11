@@ -87,9 +87,23 @@ class TexasHoldemDealer
 
 	#SHOULD THE DEALER CONTROL THIS OR SHOULD I MAKE A SEPARATE 'HOUSE RULES'
 	#CLASS THAT KEEPS TRACK OF BETTING LIMITS ETC.
-	def bet
+	def bet?
 
+		players.each do |player|
+			if player.is_a? Computer
+
+			else
+				puts "Would you like to bet, check, or fold? (Enter amount between X and Y to bet):"
+				input = 0   #$STDIN()
+				if input.downcase == "fold"
+
+				end
+			end
+		end
+		
 	end
+
+
 
 	#CARD EVALUATOR SHOULD BE ITS OWN CLASS...OR A MODULE
 	def determine_winner

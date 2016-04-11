@@ -1,7 +1,7 @@
 
 class Computer
 
-	attr_accessor :hand, :folded, :chips
+	attr_accessor :hand, :folded, :chips, :current_bet
 
 	def initialize
 		@hand = []
