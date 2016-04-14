@@ -13,6 +13,7 @@ class TexasHoldemDealer
 		@players = players
 		@ante_queue = players
 		@pot = 0
+		@currently_in_game = players
 	end
 
 	def play_game
@@ -89,20 +90,19 @@ class TexasHoldemDealer
 	#CLASS THAT KEEPS TRACK OF BETTING LIMITS ETC.
 	def bet?
 
-		players.each do |player|
-			if player.is_a? Computer
-
+		#This approach won't allow people to respond to raises or bets after their
+		#check, because each person is only considered once.  If it were a while loop,
+		#it would have to terminate when everyone had the option to bet and didn't,
+		#as well as handling a mixture of folds and bets.
+		currently_in_game.each do |player|
+			if player.bet?
+				#remove from queue
 			else
-				puts "Would you like to bet, check, or fold? (Enter amount between X and Y to bet):"
-				input = 0   #$STDIN()
-				if input.downcase == "fold"
-
-				end
+				#put them at back of queue
 			end
 		end
-		
-	end
 
+	end
 
 
 	#CARD EVALUATOR SHOULD BE ITS OWN CLASS...OR A MODULE
@@ -111,23 +111,28 @@ class TexasHoldemDealer
 	end
 end
 
-game = TexasHoldemDealer.new([], [Player.new, Computer.new, Computer.new, Computer.new])
+game = TexasHoldemDealer.new([], [Player.new, Player.new, Player.new, Player.new])
 
-#while true
+
 deck = game.play_game
 
-deck.each do |card|
-	face, suit = card.split('')
-	puts "#{card}: #{Cards::FACE_VALUES[face]}, #{Cards::SUIT_VALUES[suit]}"
-end
-	#game.hole_cards
-	#game.the_flop
-	#game.the_turn
-	#game.the_river
-	#puts "Goodbye!"
+# Use this to test combos
+#deck.each do |card|
+#	face, suit = card.split('')
+#	puts "#{card}: #{Cards::FACE_VALUES[face]}, #{Cards::SUIT_VALUES[suit]}"
+#end
+
+
+while true
+	game.hole_cards
+	game.the_flop
+	game.the_turn
+	game.the_river
+	puts "Goodbye!"
+	break
 	#game.play_again ?  next : break
 	#game.new_round #reset what needs to be reset here
-#end
+end
 
 
 
