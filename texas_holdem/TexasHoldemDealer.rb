@@ -1,6 +1,6 @@
-require '/Users/hayshopkins/Desktop/ruby_projects/card_games/Cards.rb'
-require '/Users/hayshopkins/Desktop/ruby_projects/card_games/texas_holdem/Player.rb'
-require '/Users/hayshopkins/Desktop/ruby_projects/card_games/texas_holdem/Computer.rb'
+require_relative '../Cards.rb'
+require_relative './Player.rb'
+require_relative './Computer.rb'
 
 
 class TexasHoldemDealer
