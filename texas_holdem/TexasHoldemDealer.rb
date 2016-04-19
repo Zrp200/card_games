@@ -1,7 +1,7 @@
 require_relative '../Cards.rb'
 require_relative './Player.rb'
 require_relative './Computer.rb'
-
+require_relative './HandEvaluator.rb'
 
 class TexasHoldemDealer
 	include Cards
