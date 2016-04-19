@@ -113,7 +113,7 @@ class TexasHoldemDealer
 
 	def evaluate_hand(hand)
 		#this may make more sense as a class method
-		hand_evaluator.evaluate_hand(hand)
+		hand_evaluator.evaluate_hand(hand, table)
 	end
 end
 

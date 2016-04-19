@@ -2,6 +2,8 @@ module Cards
 	#Enum for cards
 	#sends a deck to the dealer when asked
 	#perhaps supply an optional arg for modifying the deck
+	#attr_accessor :SUIT_VALUES, :FACE_VALUES
+
 	SUITS = ['c', 'd', 'h', 's']
 	FACES = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2']
 
@@ -39,5 +41,13 @@ module Cards
 		end
 
 		deck
+	end
+
+	def get_suit_value(suit)
+		SUIT_VALUES[suit]
+	end
+
+	def get_face_value(face)
+		FACE_VALUES[face]
 	end
 end
