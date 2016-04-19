@@ -1,16 +1,7 @@
-module HandEvaluator
+class HandEvaluator
 	
-	def retrieve_players(player)
-
-		if !player.folded
-			evaluate_hand(player.hand)
-		end
+	def evaluate_hand(hand)
 
 	end
-
-	def evaluate_hand (player_hand)
-
-	end
-
 
 end
