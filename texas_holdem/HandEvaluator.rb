@@ -10,12 +10,12 @@ class HandEvaluator
 		#right now I'm adding all together; will eventually need to keep
 		#seperate to make sure I try out all combos with player hand
 		hand.map { |card| 
-			face, suit = card.split(/(\D+)/) 
+			face, suit = card.split('') 
 			faces << face; suits << suit; 
 		}
 		
 		table.map { |card| 
-			face, suit = card.split(/(\D+)/) 
+			face, suit = card.split('') 
 			faces << face; suits << suit;
 		}
 
@@ -39,8 +39,8 @@ class HandEvaluator
 end
 
 hand_evaluator = HandEvaluator.new()
-hand = ['2c', '3h']
-table = ['4s', '5d', '6c', '7c', '8c']
+hand = ['8c', '9h']
+table = ['Ts', 'Jd', 'Qc', 'Kc', 'Ac']
 
 hand_evaluator.evaluate_hand(hand, table)
 
