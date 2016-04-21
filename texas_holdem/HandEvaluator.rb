@@ -6,22 +6,40 @@ class HandEvaluator
 	def evaluate_hand(hand, table)
 		suits = []
 		faces = []
+		combinations = [[], hand[1], hand[2], hand]
+
+		
+		combinations.each do |card_array|
+			get_hand_value(player_cards, table)
+		end
 
 		#right now I'm adding all together; will eventually need to keep
 		#seperate to make sure I try out all combos with player hand
-		hand.map { |card| 
-			face, suit = card.split('') 
-			faces << face; suits << suit; 
-		}
+		#hand.map { |card| 
+		#	face, suit = card.split('') 
+		#	faces << face; suits << suit; 
+		#}
 		
-		table.map { |card| 
-			face, suit = card.split('') 
-			faces << face; suits << suit;
-		}
+		#table.map { |card| 
+		#	face, suit = card.split('') 
+		#	faces << face; suits << suit;
+		#}
 
 
-		check_suit_values(suits)
-		check_face_values(faces)
+		#check_suit_values(suits)
+		#check_face_values(faces)
+	end
+
+	def get_hand_value(player_cards, table)
+
+	end
+
+	def get_suits()
+
+	end
+
+	def get_faces()
+
 	end
 
 	def check_suit_values(suits)
