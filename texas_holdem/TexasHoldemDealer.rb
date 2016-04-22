@@ -1,19 +1,20 @@
 require_relative '../Cards.rb'
 require_relative './Player.rb'
 require_relative './Computer.rb'
-
+require_relative './HandEvaluator.rb'
 
 class TexasHoldemDealer
 	include Cards
 
-	attr_accessor :deck, :table, :players, :pot
+	attr_accessor :deck, :table, :players, :currently_in_game, :hand_evaluator #:pot 
 	
-	def initialize(table, players)
+	def initialize(table, hand_evaluator, players)
 		@table = table
 		@players = players
 		@ante_queue = players
-		@pot = 0
 		@currently_in_game = players
+		#@pot = 0
+		@hand_evaluator = hand_evaluator
 	end
 
 	def play_game
@@ -49,7 +50,7 @@ class TexasHoldemDealer
 		deal(1, 1, table)
 		display_cards
 		#final bet
-		#determine_winner
+		determine_winner
 	end
 
 	def deal(num_of_cards, num_of_deals, location)
@@ -104,14 +105,21 @@ class TexasHoldemDealer
 
 	end
 
-
-	#CARD EVALUATOR SHOULD BE ITS OWN CLASS...OR A MODULE
 	def determine_winner
+		currently_in_game.each do |player|
+			evaluate_hand(player.hand)
+		end
+	end
 
+	def evaluate_hand(hand)
+		#this may make more sense as a class method
+		hand_evaluator.evaluate_hand(hand, table)
 	end
 end
 
-game = TexasHoldemDealer.new([], [Player.new, Player.new, Player.new, Player.new])
+
+game = TexasHoldemDealer.new([], HandEvaluator.new, 
+	[Player.new, Player.new, Player.new, Player.new])
 
 
 deck = game.play_game
