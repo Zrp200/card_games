@@ -8,9 +8,8 @@ class HandEvaluator
 		faces = []
 		combinations = [[], hand[1], hand[2], hand]
 
-		
 		combinations.each do |card_array|
-			get_hand_value(player_cards, table)
+			get_all_card_combinations(player_cards, table)
 		end
 
 		#right now I'm adding all together; will eventually need to keep
@@ -30,16 +29,19 @@ class HandEvaluator
 		#check_face_values(faces)
 	end
 
-	def get_hand_value(player_cards, table)
-
-	end
-
-	def get_suits()
-
-	end
-
-	def get_faces()
-
+	def get_all_card_combinations(player_cards, table)
+		hand_value = 0
+		
+		##This is if player_cards has 1 card
+		(0..4).each do |skip_index| {
+			hand = [] 
+			(0..4).each do |current_index| {
+				if current_index != skip_index
+					hand << table[current_index]
+				end
+			}
+			get_hand_value(player_cards)
+		}
 	end
 
 	def check_suit_values(suits)
