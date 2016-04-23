@@ -104,8 +104,60 @@ class HandEvaluator
 		#Two pair:             ".*(\\w)\\1.*(\\w)\\2.*#.*"
 		#One pair:             ".*(\\w)\\1.*#.*"
 		#High card:            (none)
+		hand.sort! { |x,y| get_face_value(x[0]) <=> get_face_value(y[0])}
+		high_card = hand[4]
+
+		if has_straight_flush?(hand)
+
+		elsif has_four_of_kind?(hand)
+
+		elsif has_full_house?(hand)
+
+		elsif has_flush?(hand)
+
+		elsif has_straight?(hand)
+
+		elsif has_three_of_kind?(hand)
+
+		elsif has_two_pair?(hand)
+
+		elsif has_pair?(hand)
+
+		end
 		
 		1
+	end
+
+	def has_straight_flush?(hand)
+		false
+	end
+
+	def has_four_of_kind?(hand)
+		false
+	end
+
+	def has_full_house?(hand)
+		false
+	end
+
+	def has_flush?(hand)
+		false
+	end
+
+	def has_straight?(hand)
+		false
+	end
+
+	def has_three_of_kind?(hand)
+		false
+	end
+
+	def has_two_pair?(hand)
+
+	end
+
+	def has_pair?(hand)
+
 	end
 
 	def check_suit_values(suits)
@@ -124,7 +176,7 @@ end
 
 hand_evaluator = HandEvaluator.new()
 hand = ['8c', '9h']
-table = ['Ts', 'Jd', 'Qc', 'Kc', 'Ac']
+table = ['As', 'Jd', '6c', 'Kc', 'Tc']
 
 hand_evaluator.evaluate_hand(hand, table)
 
