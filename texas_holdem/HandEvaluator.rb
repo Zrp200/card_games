@@ -95,69 +95,44 @@ class HandEvaluator
 
 	def get_hand_value(hand)
 		
-		#Royal/straight flush: "(2345A|23456|34567|...|9TJQK|TJQKA)#(\\w)\\1{4}"
-		#Four of a kind:       ".*(\\w)\\1{3}.*#.*"
-		#Full house:           "((\\w)\\2\\2(\\w)\\3|(\\w)\\4(\\w)\\5\\5)#.*"
-		#Flush:                ".*#(\\w)\\1{4}"
-		#Straight:             "(2345A|23456|34567|...|9TJQK|TJQKA)#.*"
-		#Three of a kind:      ".*(\\w)\\1\\1.*#.*"
-		#Two pair:             ".*(\\w)\\1.*(\\w)\\2.*#.*"
-		#One pair:             ".*(\\w)\\1.*#.*"
-		#High card:            (none)
+		#I'll need to return the hand score and the high card
 		hand.sort! { |x,y| get_face_value(x[0]) <=> get_face_value(y[0])}
 		high_card = hand[4]
+		faces, suits = []
+		
+		hand.each { |card|
+		face, suit = card.split('') 
+			faces << face; suits << suit; 
+		}
 
-		if has_straight_flush?(hand)
-
-		elsif has_four_of_kind?(hand)
-
-		elsif has_full_house?(hand)
-
-		elsif has_flush?(hand)
-
-		elsif has_straight?(hand)
-
-		elsif has_three_of_kind?(hand)
-
-		elsif has_two_pair?(hand)
-
-		elsif has_pair?(hand)
-
-		end
+		#i'll need to get back a total hand value and a high card
+		check_for_multiples(faces)
+		check_for_straight(faces)
+		check_for_flush(suits)
 		
 		1
 	end
 
-	def has_straight_flush?(hand)
-		false
+	def check_for_multiples(faces)
+		faces = faces.uniq
+		if hand.size == 5
+			return;
+		elsif hand.size == 4
+			get_pair()
+		elsif hand.size == 3
+			get_three_of_kind_or_two_pair()
+		elsif hand.size == 2
+			get_four_of_kind_or_full_house()
+		end
 	end
 
-	def has_four_of_kind?(hand)
-		false
-	end
-
-	def has_full_house?(hand)
-		false
-	end
-
-	def has_flush?(hand)
-		false
-	end
-
-	def has_straight?(hand)
-		false
-	end
-
-	def has_three_of_kind?(hand)
-		false
-	end
-
-	def has_two_pair?(hand)
-
-	end
-
-	def has_pair?(hand)
-
+	def check_for_flush(suits)
+		suits = suits.uniq
+		if suits.size == 1
+			return
+		else
+			return -1
+		end
 	end
 
 	def check_suit_values(suits)
