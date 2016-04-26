@@ -148,24 +148,32 @@ class HandEvaluator
 	def score(hand, args*)
 		#Need to convert args into the card face value (in most cases)
 		case hand
-		when 0
-			args[0] * 10
-		when 1
-			(args[0] + 13) * 10 + args[1]
-		when 2
-			(args[0] + 1) * 100
-		when 3
-			args[0] * 400
-		when 4
-			5800
-		when 5
-			(1 + args[0]) * 200 + args[1]
-		when 6
-			(args[0] + 2) * 10000
-		when 7
-			1000000 + args[0]
+		when "Pair"
+			#pair = (card_value * 10) Range: 20-140
+			#args[0] * 10
+		when "Two Pair"
+			#two_pair = ((13 + higher_pair_value) * 10 + second_pair_card_value) Range: 152-284
+			#(args[0] + 13) * 10 + args[1]
+		when "Three of a Kind"
+			#three_of_kind = ((1 + card_value) * 100) Range: 300-1500
+			#(args[0] + 1) * 100
+		when "Straight"
+			#args[0] * 400
+		when "Flush"
+			#flush = (5800) Range: 5800
+			#5800
+		when "Full House"
+			#full_house = (2 * three_of_a_kind_score * 10 + second_pair_card_value) Range: 6003-30013
+			#(1 + args[0]) * 200 + args[1]
+		when "Four of a Kind"
+			#four_of_kind = ((2 + card_value) * 10000) Range: 40000 - 160000
+			#(args[0] + 2) * 10000
+		when "Straight Flush"
+			#straight_flush = 1000000 + high_card_value
+			#1000000 + args[0]
 		else
-			args[0]
+			#high_card = card_value
+			#args[0]
 		end	
 	end
 
