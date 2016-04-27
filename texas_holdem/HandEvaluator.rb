@@ -7,64 +7,66 @@ class HandEvaluator
 		suits = []
 		faces = []
 		combinations = [[hand[0]], [hand[1]], hand]
-		hand_value = get_hand_value(table)
+		hand_value, winning_hand = get_hand_value(table)
 
 		combinations.each do |player_cards|
-			#Return hand_value and hand
-			value = get_all_card_combinations(player_cards, table) 
-			#hand_value = value if value > hand_value
-			break
+			value, hand = get_all_card_combinations(player_cards, table) 
+			hand_value, winning_hand = value, hand if value > hand_value
 		end
+		puts '---------'
+		puts 'And the Winning Hand is:'
+		puts hand_value
+		puts winning_hand
+		puts '---------'
+		[hand_value, winning_hand]
 	end
 
 	def get_all_card_combinations(player_cards, table)
-
 		if player_cards.size == 1
 			combinations_with_one_card(player_cards, table)
 		else
 			combinations_with_two_cards(player_cards, table)
 		end
-
 	end
 
 	def combinations_with_two_cards(player_cards, table)
 		x, y, z = 0, 1, 2
 		hand_value = 0
+		winning_hand = []
 
-		#There are 10 total combinations
-		#Rather than 10, should have the combos be situational 
+		#There are 10 total combinations, , make situational in case I need to call in dif circumstance
 		10.times do ||
 			hand = [player_cards[0], player_cards[1]]
 			if z == 4 && y == 3 && x == 2
 				hand += [table[x], table[y], table[z]]
-				value = get_hand_value(hand)
-				hand_value = value if value > hand_value
+				value, hand = get_hand_value(hand)
+				hand_value, winning_hand = value, hand if value > hand_value
 				break
 			elsif z == 4 && y == 3
 				hand += [table[x], table[y], table[z]]
-				value = get_hand_value(hand)
-				hand_value = value if value > hand_value
+				value, hand = get_hand_value(hand)
+				hand_value, winning_hand = value, hand if value > hand_value
 				x += 1; y = x + 1; z = y + 1;
 			elsif z == 4
 				hand += [table[x], table[y], table[z]]
-				value = get_hand_value(hand)
-				hand_value = value if value > hand_value
+				value, hand = get_hand_value(hand)
+				hand_value, winning_hand = value, hand if value > hand_value
 				y += 1; z = y + 1;
 			else
 				hand += [table[x], table[y], table[z]]
-				value = get_hand_value(hand)
-				hand_value = value if value > hand_value
+				value, hand = get_hand_value(hand)
+				hand_value, winning_hand = value, hand if value > hand_value
 				z += 1;
 			end
 		end
-
-		hand_value
+		[hand_value, winning_hand]
 	end
 
 	def combinations_with_one_card(player_cards, table)
 		hand_value = 0
+		winning_hand = []
 
-		#There are 5 total combinations
+		#There are 5 total combinations, make situational in case I need to call in dif circumstance
 		(0..4).each do |skip_index|
 			hand = [player_cards[0]] 
 			(0..4).each do |current_index|
@@ -72,27 +74,24 @@ class HandEvaluator
 					hand << table[current_index]
 				end
 			end
-			value =  get_hand_value(hand)
-			#puts hand
-			puts value
-			puts '---------'
-			#hand_value = value if value > hand_value
+			value, hand =  get_hand_value(hand)
+			hand_value, winning_hand = value, hand if value > hand_value
 		end
-
-		hand_value
+		[hand_value, winning_hand]
 	end
 
 	def get_hand_value(hand)
-		
 		hand.sort!{ |x,y| get_face_value(x[0]) <=> get_face_value(y[0])}
 		faces, suits = split_hand(hand) 
 		get_face_values(faces)
 		get_suit_values(suits)
-		
+
 		multiples_evaluation = check_for_multiples(faces)
 		flush_evaluation = check_for_flush(suits.uniq)
 		straight_evaluation = check_for_straight(faces)
-		
+		straight_flush = (straight_evaluation > 0 && flush_evaluation > 0) ? 1000000 + faces[4] : -1
+		hand_value = [multiples_evaluation, flush_evaluation, straight_evaluation, straight_flush, faces[4]].max
+		[hand_value, hand]
 	end
 
 	def split_hand(hand)
@@ -100,18 +99,17 @@ class HandEvaluator
 	end
 
 	def check_for_multiples(faces)
-		score = -1
 		multiples = faces.select {|face| faces.count(face) > 1}
 		multiples.uniq!
 		
 		if multiples.size == 1
 			case number = faces.count(multiples[0])
 			when 2
-				score("Pair")
+				score("Pair", multiples[0])
 			when 3
-				score("Three of a Kind")
+				score("Three of a Kind", multiples[0])
 			when 4
-				score("Four of a Kind")
+				score("Four of a Kind", multiples[0])
 			else
 				"You should never be here!"
 			end
@@ -119,11 +117,11 @@ class HandEvaluator
 			number = faces.count(multiples[0])
 			number2 = faces.count(multiples[1])
 			if number == 2 && number2 == 3
-				score("Full House")
+				score("Full House", multiples[1], multiples[0])
 			elsif number == 3 && number2 == 2
-				score("Full House")
+				score("Full House", multiples[0], multiples[1])
 			else
-				score("Two Pair")
+				score("Two Pair", multiples[0], multiples[1])
 			end
 		else
 			-1
@@ -147,38 +145,22 @@ class HandEvaluator
 	end
 
 	def score(hand, *args)
-		#Need to convert args into the card face value (in most cases)
 		case hand
 		when "Pair"
-			#pair = (card_value * 10) Range: 20-140
-			#args[0] * 10
-			puts "Score: pair"
+			(args[0] * 10) #Range: 20-140
 		when "Two Pair"
-			#two_pair = ((13 + higher_pair_value) * 10 + second_pair_card_value) Range: 152-284
-			#(args[0] + 13) * 10 + args[1]
-			puts "Score: two pair"
+			(args[0] + 13) * 10 + args[1] #Range: 152-284
 		when "Three of a Kind"
-			#three_of_kind = ((1 + card_value) * 100) Range: 300-1500
-			#(args[0] + 1) * 100
-			puts "Score: three"
+			(1 + args[0]) * 100 #Range: 300-1500
 		when "Straight"
-			#args[0] * 400
-			puts "Score: straight"
+			args[0] * 400
 		when "Flush"
-			#flush = (5800) Range: 5800
-			#5800
-			puts "Score: flush"
+			5800
 		when "Full House"
-			#full_house = (2 * three_of_a_kind_score * 10 + second_pair_card_value) Range: 6003-30013
-			#(1 + args[0]) * 200 + args[1]
-			puts "Score: full"
+			full_house = (1 + args[0]) * 2000 + (args[1] * 10) #Range: 6030-30130
 		when "Four of a Kind"
-			#four_of_kind = ((2 + card_value) * 10000) Range: 40000 - 160000
-			#(args[0] + 2) * 10000
-			puts "Score: four" 
+			(2 + args[0]) * 10000 #Range: 40000 - 160000
 		else
-			#high_card = card_value
-			#args[0]
 			puts "You should never be here!"
 		end	
 	end
@@ -194,8 +176,8 @@ class HandEvaluator
 end
 
 hand_evaluator = HandEvaluator.new()
-hand = ['8c', '9h']
-table = ['6s', '8c', '9c', '8c', 'Tc']
+hand = ['Ac', '7h']
+table = ['4c', '2d', 'Qs', 'Kh', 'Tc']
 
 hand_evaluator.evaluate_hand(hand, table)
 
