@@ -3,21 +3,26 @@ require_relative '../Cards.rb'
 class HandEvaluator
 	include Cards
 
+	#NEITHER STRAIGHT OR STRAIGHT FLUSH ARE CONSIDERING THE WHEEL RIGHT NOW!!!
+
+	HAND_NAME = {
+		2..14 => 'High Card', 20..140 => 'a Pair', 153..274 => 'Two Pair', 
+		300..1500 => 'Three of a Kind', 2000..5600 => 'a Straight', 5800 => 'a Flush', 
+		6030..30130 => 'a Full House', 40000..160000 => 'Four of a Kind',
+		1000000..1000013 => 'a Straight Flush', 1000014 => 'a Royal Flush'
+	}
+
 	def evaluate_hand(hand, table)	
 		suits = []
 		faces = []
+		hand_value = -1
+		winning_hand = []
 		combinations = [[hand[0]], [hand[1]], hand]
-		hand_value, winning_hand = get_hand_value(table)
 
 		combinations.each do |player_cards|
 			value, hand = get_all_card_combinations(player_cards, table) 
 			hand_value, winning_hand = value, hand if value > hand_value
 		end
-		puts '---------'
-		puts 'And the Winning Hand is:'
-		puts hand_value
-		puts winning_hand
-		puts '---------'
 		[hand_value, winning_hand]
 	end
 
@@ -149,11 +154,11 @@ class HandEvaluator
 		when "Pair"
 			(args[0] * 10) #Range: 20-140
 		when "Two Pair"
-			(args[0] + 13) * 10 + args[1] #Range: 152-284
+			(args[0] + 13) * 10 + args[1] #Range: 153-274
 		when "Three of a Kind"
 			(1 + args[0]) * 100 #Range: 300-1500
 		when "Straight"
-			args[0] * 400
+			args[0] * 400 #Range: 2000-5600 
 		when "Flush"
 			5800
 		when "Full House"
@@ -173,11 +178,19 @@ class HandEvaluator
 		faces.map! {|face| get_face_value(face)}
 	end
 
+	def get_hand_name(hand_value)
+		HAND_NAME.select {|range| range === hand_value}.values.first
+	end
+
 end
 
-hand_evaluator = HandEvaluator.new()
-hand = ['Ac', '7h']
-table = ['4c', '2d', 'Qs', 'Kh', 'Tc']
+#hand_evaluator = HandEvaluator.new()
+#hand = ['Ac', '7h']
+#table = ['Ad', 'Ac', 'Ac', 'Kc', 'Tc']
 
-hand_evaluator.evaluate_hand(hand, table)
+#hand_value, winning_hand = hand_evaluator.evaluate_hand(hand, table)
+#puts '----------'
+#puts hand_value
+#puts winning_hand
+#puts '----------'
 

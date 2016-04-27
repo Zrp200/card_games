@@ -1,11 +1,12 @@
 
 class Player
 
-	attr_accessor :hand, :chips, :current_bet #:folded, :computer
+	attr_accessor :hand, :chips, :current_bet, :name #:folded, :computer
 
-	def initialize()
+	def initialize(name)
 		@hand = []
 		@chips = 1000000 #could probably change this to user input
+		@name = name
 		#@folded = false
 		#@computer = computer?
 	end

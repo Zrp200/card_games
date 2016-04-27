@@ -1,6 +1,5 @@
 require_relative '../Cards.rb'
 require_relative './Player.rb'
-require_relative './Computer.rb'
 require_relative './HandEvaluator.rb'
 
 class TexasHoldemDealer
@@ -19,15 +18,13 @@ class TexasHoldemDealer
 
 	def play_game
 		@deck = build_deck(52)
-		#HOW DO I KEEP TRACK OF WHOSE TURN IT IS TO ANTE?
-		#Use an array of players like a queue
+		#Need to keep track of ante order
 		#ante
 	end
 
 	def hole_cards
 
 		player_cards = deal(2, 4, [])
-		puts player_cards
 		deal_to_players(player_cards)
 		display_cards
 		#bet
@@ -67,28 +64,26 @@ class TexasHoldemDealer
 	end
 
 	def deal_to_players(player_cards)
-
 		players.each do |player|
-			player.hand << player_cards.shift(2)
+			player.hand << player_cards.shift
+			player.hand << player_cards.shift
 		end
-
 	end
 
-	#MOVE THIS INTO ITS OWN CLASS SOON; USE CLASS METHODS?
+	#Add functionality to say what step in the deal it is
+	#Should I make a separate class that handles the view?
 	def display_cards
-
 		player_number = 1
 		players.each do |player|
-			puts "Player #{player_number}: #{player.get_hand}"
+			puts "#{player.name}: #{player.get_hand}"
 			player_number += 1
 		end
 		puts "Table: #{table}"
-		sleep(2)
-
+		#sleep(2)
+		puts '------------'
+		puts '------------'
 	end
 
-	#SHOULD THE DEALER CONTROL THIS OR SHOULD I MAKE A SEPARATE 'HOUSE RULES'
-	#CLASS THAT KEEPS TRACK OF BETTING LIMITS ETC.
 	def bet?
 
 		#This approach won't allow people to respond to raises or bets after their
@@ -105,10 +100,18 @@ class TexasHoldemDealer
 
 	end
 
+	#Need to figure out what to do when table wins
 	def determine_winner
-		currently_in_game.each do |player|
-			evaluate_hand(player.hand)
+		hand_value, winning_hand = @hand_evaluator.get_hand_value(table)
+		winning_player = "The table"
+
+		#change this to only examine players currently in the game
+		@players.each do |player|
+			value, hand = @hand_evaluator.evaluate_hand(player.hand, @table)
+			hand_value, winning_hand, winning_player = value, hand, player.name if value > hand_value
 		end
+		hand_name = @hand_evaluator.get_hand_name(hand_value)
+		puts "#{winning_player} won with #{hand_name}."
 	end
 
 	def evaluate_hand(hand)
@@ -119,7 +122,7 @@ end
 
 
 game = TexasHoldemDealer.new([], HandEvaluator.new, 
-	[Player.new, Player.new, Player.new, Player.new])
+	[Player.new("Hays"), Player.new("Computer 1"), Player.new("Computer 2"), Player.new("Computer 3")])
 
 
 deck = game.play_game
@@ -136,6 +139,7 @@ while true
 	game.the_flop
 	game.the_turn
 	game.the_river
+	sleep(10)
 	puts "Goodbye!"
 	break
 	#game.play_again ?  next : break
