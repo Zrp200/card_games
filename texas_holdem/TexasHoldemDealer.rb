@@ -89,7 +89,6 @@ class TexasHoldemDealer
 	def bet
 		#perhaps pass in an array of players currently in and their chips so that I don't 
 		#create a dependency between betting class and player as well
-		@
 	end
 
 	def determine_winner
@@ -105,7 +104,7 @@ class TexasHoldemDealer
 		puts "#{winning_player} won with #{hand_name}."
 	end
 
-	def get_hand_value(hand, table)
+	def get_hand_value(hand)
 		@hand_evaluator.get_hand_value(hand)
 	end
 
