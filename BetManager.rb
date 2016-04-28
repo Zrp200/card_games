@@ -1,0 +1,3 @@
+module BetManager
+
+end

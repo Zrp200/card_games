@@ -1,9 +1,11 @@
+require_relative '../BetManager.rb'
 require_relative '../Cards.rb'
 require_relative './Player.rb'
 require_relative './HandEvaluator.rb'
 
 class TexasHoldemDealer
 	include Cards
+	include BetManager
 
 	attr_accessor :deck, :table, :players, :currently_in_game, :hand_evaluator #:pot 
 	
@@ -84,39 +86,35 @@ class TexasHoldemDealer
 		puts '------------'
 	end
 
-	def bet?
-
-		#This approach won't allow people to respond to raises or bets after their
-		#check, because each person is only considered once.  If it were a while loop,
-		#it would have to terminate when everyone had the option to bet and didn't,
-		#as well as handling a mixture of folds and bets.
-		currently_in_game.each do |player|
-			if player.bet?
-				#remove from queue
-			else
-				#put them at back of queue
-			end
-		end
-
+	def bet
+		#perhaps pass in an array of players currently in and their chips so that I don't 
+		#create a dependency between betting class and player as well
+		@
 	end
 
-	#Need to figure out what to do when table wins
 	def determine_winner
-		hand_value, winning_hand = @hand_evaluator.get_hand_value(table)
+		hand_value, winning_hand = get_hand_value(table)
 		winning_player = "The table"
 
 		#change this to only examine players currently in the game
 		@players.each do |player|
-			value, hand = @hand_evaluator.evaluate_hand(player.hand, @table)
+			value, hand = evaluate_hand(player.hand, @table)
 			hand_value, winning_hand, winning_player = value, hand, player.name if value > hand_value
 		end
-		hand_name = @hand_evaluator.get_hand_name(hand_value)
+		hand_name = get_hand_name(hand_value)
 		puts "#{winning_player} won with #{hand_name}."
 	end
 
-	def evaluate_hand(hand)
-		#this may make more sense as a class method
-		hand_evaluator.evaluate_hand(hand, table)
+	def get_hand_value(hand, table)
+		@hand_evaluator.get_hand_value(hand)
+	end
+
+	def evaluate_hand(hand, table)
+		@hand_evaluator.evaluate_hand(hand, table)
+	end
+
+	def get_hand_name(hand_value)
+		@hand_evaluator.get_hand_name(hand_value)
 	end
 end
 
