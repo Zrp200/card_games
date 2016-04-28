@@ -1,11 +1,9 @@
-require_relative '../BetManager.rb'
 require_relative '../Cards.rb'
 require_relative './Player.rb'
 require_relative './HandEvaluator.rb'
 
 class TexasHoldemDealer
 	include Cards
-	include BetManager
 
 	attr_accessor :deck, :table, :players, :currently_in_game, :hand_evaluator #:pot 
 	
@@ -14,7 +12,6 @@ class TexasHoldemDealer
 		@players = players
 		@ante_queue = players
 		@currently_in_game = players
-		#@pot = 0
 		@hand_evaluator = hand_evaluator
 	end
 
@@ -25,44 +22,39 @@ class TexasHoldemDealer
 	end
 
 	def hole_cards
-
 		player_cards = deal(2, 4, [])
 		deal_to_players(player_cards)
 		display_cards
-		#bet
+		bet
 	end
 
 	def the_flop
 		deal(3, 1, table)
 		display_cards
-		#bet
+		bet
 	end
 
 	def the_turn
-		#put 1 card on the table
 		deal(1, 1, table)
 		display_cards
-		#bet
+		bet
 	end
 
 	def the_river
 		deal(1, 1, table)
 		display_cards
-		#final bet
+		bet
 		determine_winner
 	end
 
 	def deal(num_of_cards, num_of_deals, location)
-		
 		(1..num_of_deals).each do
 			card_one, card_two, card_three = deck.sample(num_of_cards)
 			deck.delete(card_one) and location.push(card_one) unless card_one == nil
 			deck.delete(card_two) and location.push(card_two) unless card_two == nil
 			deck.delete(card_three) and location.push(card_three) unless card_three == nil
 		end
-			
 		location
-
 	end
 
 	def deal_to_players(player_cards)
@@ -120,24 +112,13 @@ end
 
 game = TexasHoldemDealer.new([], HandEvaluator.new, 
 	[Player.new("Hays"), Player.new("Computer 1"), Player.new("Computer 2"), Player.new("Computer 3")])
-
-
-deck = game.play_game
-
-# Use this to test combos
-#deck.each do |card|
-#	face, suit = card.split('')
-#	puts "#{card}: #{Cards::FACE_VALUES[face]}, #{Cards::SUIT_VALUES[suit]}"
-#end
-
+game.play_game
 
 while true
 	game.hole_cards
 	game.the_flop
 	game.the_turn
 	game.the_river
-	sleep(10)
-	puts "Goodbye!"
 	break
 	#game.play_again ?  next : break
 	#game.new_round #reset what needs to be reset here
