@@ -1,14 +1,16 @@
 require_relative '../Cards.rb'
+require_relative './HoldemBetManager.rb'
 require_relative './Player.rb'
 require_relative './HandEvaluator.rb'
 
 class TexasHoldemDealer
 	include Cards
 
-	attr_accessor :deck, :table, :players, :currently_in_game, :hand_evaluator #:pot 
+	attr_accessor :deck, :table, :players, :currently_in_game, :bet_manager, :hand_evaluator, :ante_queue
 	
-	def initialize(table, hand_evaluator, players)
-		@table = table
+	def initialize(bet_manager, hand_evaluator, players)
+		@table = []
+		@bet_manager = bet_manager
 		@players = players
 		@ante_queue = players
 		@currently_in_game = players
@@ -17,8 +19,7 @@ class TexasHoldemDealer
 
 	def play_game
 		@deck = build_deck(52)
-		#Need to keep track of ante order
-		#ante
+		collect_antes
 	end
 
 	def hole_cards
@@ -45,6 +46,10 @@ class TexasHoldemDealer
 		display_cards
 		bet
 		determine_winner
+	end
+
+	def collect_antes
+		bet_manager.collect_antes(ante_queue)
 	end
 
 	def deal(num_of_cards, num_of_deals, location)
@@ -79,8 +84,7 @@ class TexasHoldemDealer
 	end
 
 	def bet
-		#perhaps pass in an array of players currently in and their chips so that I don't 
-		#create a dependency between betting class and player as well
+		bet_manager.bet(currently_in_game)
 	end
 
 	def determine_winner
@@ -110,7 +114,7 @@ class TexasHoldemDealer
 end
 
 
-game = TexasHoldemDealer.new([], HandEvaluator.new, 
+game = TexasHoldemDealer.new(HoldemBetManager.new, HandEvaluator.new, 
 	[Player.new("Hays"), Player.new("Computer 1"), Player.new("Computer 2"), Player.new("Computer 3")])
 game.play_game
 

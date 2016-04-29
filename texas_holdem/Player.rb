@@ -1,7 +1,6 @@
 
 class Player
-
-	attr_accessor :hand, :chips, :current_bet, :name #:folded, :computer
+	attr_accessor :hand, :chips, :current_bet, :name, :computer
 
 	def initialize(name)
 		@hand = []
@@ -23,21 +22,12 @@ class Player
 		#end
 	end
 
-	#NEEDS TO RETURN TRUE IF THEY ARE STILL IN THE GAME AND FALSE IF NOT
-	def bet?
-		
-		#if player.computer
-			#calculate_win_odds
-		#else
-			#puts "Would you like to bet, check, or fold? (Enter amount between X and Y to bet):"
-			#nput = 0   #$STDIN()
-			#if input.downcase == "fold"
-				#folded? = true
-		#	end
-		#end
-
-		#folded?
+	def get_chips(amount)
+		chips -= amount
+		amount
 	end
 
-	
+	def get_bet
+		"Fold"
+	end
 end
