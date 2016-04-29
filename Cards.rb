@@ -4,31 +4,31 @@ module Cards
 	#perhaps supply an optional arg for modifying the deck
 	#attr_accessor :SUIT_VALUES, :FACE_VALUES
 
-	SUITS = ['c', 'd', 'h', 's']
-	FACES = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2']
-
 	SUIT_VALUES = {
-		'c' => 0,
-		'd' => 1,
-		'h' => 2,
-		's' => 3
+		'♣' => 0,
+		'♦' => 1,
+		'♥' => 2,
+		'♠' => 3
 	}
 
 	FACE_VALUES = {
-		'2' => 2,
-		'3' => 3,
-		'4' => 4,
-		'5' => 5,
-		'6' => 6,
-		'7' => 7,
-		'8' => 8,
-		'9' => 9,
-		'T' => 10,
-		'J' => 11,
-		'Q' => 12,
-		'K' => 13,
-		'A' => 14
+		' 2' => 2,
+		' 3' => 3,
+		' 4' => 4,
+		' 5' => 5,
+		' 6' => 6,
+		' 7' => 7,
+		' 8' => 8,
+		' 9' => 9,
+		'10' => 10,
+		' J' => 11,
+		' Q' => 12,
+		' K' => 13,
+		' A' => 14
 	}
+
+  SUITS = SUIT_VALUES.keys
+  FACES = FACE_VALUES.keys
 
 	def build_deck(number_of_cards)
 		deck = []
