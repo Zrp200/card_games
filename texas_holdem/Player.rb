@@ -24,7 +24,8 @@ class Player
 	end
 
 	def get_chips(amount)
-		chips -= amount
+		@chips = chips.to_s.to_i - amount
+		@current_bet = current_bet.to_s.to_i + amount
 		amount
 	end
 end
