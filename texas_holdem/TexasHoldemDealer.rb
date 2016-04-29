@@ -19,7 +19,7 @@ class TexasHoldemDealer
 
 	def play_game
 		@deck = build_deck(52)
-		collect_antes
+		#collect_antes
 	end
 
 	def hole_cards
@@ -84,7 +84,9 @@ class TexasHoldemDealer
 	end
 
 	def bet
-		bet_manager.bet(currently_in_game)
+		players_who_bet = bet_manager.bet(currently_in_game)
+		#Make sure betting order doesn't get messed up here
+		currently_in_game = players_who_bet
 	end
 
 	def determine_winner

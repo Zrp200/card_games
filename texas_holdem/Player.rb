@@ -4,8 +4,9 @@ class Player
 
 	def initialize(name)
 		@hand = []
-		@chips = 1000000 #could probably change this to user input
+		@chips = 10000 #could probably change this to user input
 		@name = name
+		@current_bet = 0
 		#@folded = false
 		#@computer = computer?
 	end
@@ -13,7 +14,7 @@ class Player
 	def get_hand
 		#if computer?
 			#if folded
-			#	"Folder"
+			#	"Folded"
 			#else
 			#	"Playing"
 			#end
@@ -25,9 +26,5 @@ class Player
 	def get_chips(amount)
 		chips -= amount
 		amount
-	end
-
-	def get_bet
-		"Fold"
 	end
 end
