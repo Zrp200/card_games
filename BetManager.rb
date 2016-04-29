@@ -13,48 +13,51 @@ class BetManager
 
 	def manage_antes(ante_queue)
 		(1..2).time do |number|
-			player = get_first_player(ante_queue)
+			player = ante_queue.shift
 			pot += player.get_chips(ante_amout/number)
-			put_player_at_end(player, ante_queue)
+			ante_queue.push(player)
 		end
 	end
 
 	def manage_betting_order(players)
-		bets, checks_or_calls = 0
+		bets, checks_or_calls = 0, 0
 		
-		while players.size > 1 && bets + checks < players.size
-			player = ante_queue.shift
-			player_bet = ask_for_bet(player)
-			player_bet = analyze_bet(player_bet)
-			
+		while players.size > 1 && bets + checks_or_calls < players.size
+			player = players.shift
+			player_bet = get_bet_value(player)
+
 			if player_bet.is_a?(Fixnum)
 				bets, checks_or_calls = 1, 0
-			elsif player_bet = "Fold"
+				@total_bet = total_bet.to_s.to_i + player.get_chips(player_bet)
+			elsif player_bet == "fold"
 				next
-			elsif player_bet = "Check"
+			elsif player_bet == "check"
 				checks_or_calls += 1
-			else #what do I need to do at this point in case of a call? Just add to var or do something with pot?
+			else
 				checks_or_calls += 1
+				bet = player.get_chips(total_bet-player.current_bet)
+				add_to_pot(bet)
 			end
-			ante_queue.push(player)
+			puts "About to be pushed"
+			players.push(player)
 		end
 		players
 	end
 
-	def analyze_bet(player)
+	def get_bet_value(player)
 		bet = 0
 		while true
-			bet = ask_for_bet(player)
-			if bet == "Fold"
+			response = get_bet(player)
+			if response == "fold"
 				break
-			elsif bet == "Check"
+			elsif response == "check"
 				if total_bet > player.current_bet
 					puts "Incorrect input"
 					next
 				else
 					break 
 				end
-			elsif bet == "Call"
+			elsif response == "call"
 				if total_bet == 0
 					puts "Incorrect input"
 					next
@@ -63,44 +66,42 @@ class BetManager
 				end
 			end
 
-			bet = bet.match(/[0-9]*/).to_s.to_i
+			bet = response.match(/[0-9]*/).to_s.to_i
 			if bet < min_bet || bet > max_bet
 				next
 			elsif bet > 0
 				#Will need to alter this later for side pots
 				#Should I wait to add to the pot?
-				if bet > player.chips #THIS IS WHERE SIDEBETS WOULD COME INTO PLAY
-					return "Fold"
+				if bet > player.chips #THIS IS WHERE SIDEBETS WOULD COME INTO PLAY\
+					return "fold"
 				else
-					#add_to_pot(bet)
-					add_to_pot(bet)
-					break
+					return bet
 				end
 			else
 				puts "Incorrect input"
 				next
 			end
 		end
-		bet
+		response
 	end
 
-	def ask_for_bet(player)
+	def get_bet(player)
 		if player.current_bet > 0 #They have been raised
 			puts "#{player.name}: Would you like to 'Call' the raise of #{total_bet - player.current_bet}, re-raise ('#{min_bet} - #{max_bet}') or 'Fold'?"
-			input = $stdin.gets.strip
+			input = $stdin.gets.strip.downcase
 		elsif player.current_bet == 0 && total_bet > 0 # they have not yet bet
 			puts "#{player.name}: Would you like to 'Call' the bet of #{total_bet - player.current_bet}, re-raise ('#{min_bet} - #{max_bet}'), or 'Fold'?"
-			input = $stdin.gets.strip
+			input = $stdin.gets.strip.downcase
 		elsif player.current_bet == 0
 			puts "#{player.name}: Would you like to bet ('#{min_bet} - #{max_bet}'), 'Check', 'Fold'?"
-			input = $stdin.gets.strip
+			input = $stdin.gets.strip.downcase
 		else
 			puts "You should not be here!"
 		end
 	end
 
 	def add_to_pot(bet)
-		@pot = pot.to_s.to_i + bet
+		@pot = pot + bet
 	end
 
 	def award_pot(player)
