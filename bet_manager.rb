@@ -1,7 +1,7 @@
 #May need to make this more abstract as I add more games that use it
 #RIGHT NOW, NOT HAVING ENOUGH MONEY RESULTS IN YOU FOLDING FOR THE HAND; WILL NEED TO INTRODUCE SIDE POTS
 class BetManager
-  attr_accessor :pot, :min_bet, :max_bet, :ante_amount, :total_bet, :side_pots
+  attr_reader :award_pot
 
   def initialize
     @pot = 0
@@ -118,4 +118,8 @@ class BetManager
     @pot = 0
     pot_value
   end
+
+  private
+
+  attr_reader :max_bet, :min_bet, :pot, :total_bet
 end

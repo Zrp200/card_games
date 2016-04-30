@@ -1,15 +1,12 @@
 class Player
-  attr_accessor :hand, :chips, :current_bet, :name, :computer
+  attr_accessor :chips, :current_bet
+  attr_reader :hand, :name
 
   def initialize(name)
     @hand = []
     @chips = 10000
     @name = name
     @current_bet = 0
-  end
-
-  def get_hand
-      hand
   end
 
   def get_chips(amount)

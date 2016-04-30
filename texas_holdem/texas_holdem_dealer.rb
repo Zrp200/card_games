@@ -6,7 +6,7 @@ require_relative './hand_evaluator.rb'
 class TexasHoldemDealer
   include Cards
 
-  attr_accessor :deck, :table, :players, :currently_in_game, :bet_manager, :hand_evaluator, :ante_queue
+  attr_reader :players
 
   def initialize(bet_manager, hand_evaluator, players)
     @table = []
@@ -72,7 +72,7 @@ class TexasHoldemDealer
   #Should I make a separate class that handles the view?
   def display_cards
     currently_in_game.each do |player|
-      puts "#{player.name}: #{player.get_hand}"
+      puts "#{player.name}: #{player.hand}"
     end
     puts "Table: #{table}"
     puts '------------'
@@ -114,6 +114,10 @@ class TexasHoldemDealer
 
   def play_again?
   end
+
+  private
+
+  attr_reader :bet_manager, :currently_in_game, :deck, :hand_evaluator, :table
 end
 
 game = TexasHoldemDealer.new(HoldemBetManager.new, HandEvaluator.new,
