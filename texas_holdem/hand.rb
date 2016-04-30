@@ -7,7 +7,7 @@ class Hand
 
   def << card
     cards << card
-    cards.sort_by(&:face_value)
+    cards.sort_by!(&:face_value)
   end
   alias_method :push, :<<
 
