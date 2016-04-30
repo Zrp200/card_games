@@ -83,7 +83,7 @@ class TexasHoldemDealer
     hand_value, winning_hand = get_hand_value(table.cards)
     winning_player = "The table"
     #change this to only examine players currently in the game
-    @players.each do |player|
+    @currently_in_game.each do |player|
       value, hand = evaluate_hands(player.hand, @table)
       hand_value, winning_hand, winning_player = value, hand, player if value > hand_value
     end
