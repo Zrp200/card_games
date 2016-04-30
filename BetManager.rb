@@ -55,7 +55,7 @@ class BetManager
           puts "Incorrect input"
           next
         else
-          break 
+          break
         end
       elsif response == "call"
         if total_bet == 0
@@ -90,7 +90,7 @@ class BetManager
       #When asking to raise, it will say by full amount instead of difference
       puts "#{player.name}: Would you like to 'Call' the raise of #{total_bet - player.current_bet}, re-raise ('#{min_bet} - #{max_bet}') or 'Fold'?"
       input = $stdin.gets.strip.downcase
-    elsif player.current_bet == 0 && total_bet > 0 
+    elsif player.current_bet == 0 && total_bet > 0
       puts "#{player.name}: Would you like to 'Call' the bet of #{total_bet - player.current_bet}, re-raise ('#{min_bet} - #{max_bet}'), or 'Fold'?"
       input = $stdin.gets.strip.downcase
     elsif player.current_bet == 0

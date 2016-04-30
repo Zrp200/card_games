@@ -18,7 +18,7 @@ class Player
       #else
       #  "Playing"
       #end
-    #else  
+    #else
       hand
     #end
   end

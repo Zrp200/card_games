@@ -7,7 +7,7 @@ class TexasHoldemDealer
   include Cards
 
   attr_accessor :deck, :table, :players, :currently_in_game, :bet_manager, :hand_evaluator, :ante_queue
-  
+
   def initialize(bet_manager, hand_evaluator, players)
     @table = []
     @bet_manager = bet_manager
@@ -120,7 +120,7 @@ class TexasHoldemDealer
 end
 
 
-game = TexasHoldemDealer.new(HoldemBetManager.new, HandEvaluator.new, 
+game = TexasHoldemDealer.new(HoldemBetManager.new, HandEvaluator.new,
   [Player.new("Hays"), Player.new("Computer 1"), Player.new("Computer 2"), Player.new("Computer 3")])
 game.play_game
 
@@ -131,7 +131,7 @@ while true
   game.the_river
   puts '*******'
   break
-  #if game.play_again 
+  #if game.play_again
   #  game.new_round
   #else
   #  break

@@ -4,13 +4,13 @@ class HandEvaluator
   include Cards
 
   HAND_NAME = {
-    2..14 => 'High Card', 20..140 => 'a Pair', 153..274 => 'Two Pair', 
-    300..1500 => 'Three of a Kind', 2000..5600 => 'a Straight', 5800 => 'a Flush', 
+    2..14 => 'High Card', 20..140 => 'a Pair', 153..274 => 'Two Pair',
+    300..1500 => 'Three of a Kind', 2000..5600 => 'a Straight', 5800 => 'a Flush',
     6030..30130 => 'a Full House', 40000..160000 => 'Four of a Kind',
     170000..173200 => 'a Straight Flush', 173600 => 'a Royal Flush'
   }
 
-  def evaluate_hands(hand, table)  
+  def evaluate_hands(hand, table)
     suits = []
     faces = []
     hand_value = -1
@@ -18,7 +18,7 @@ class HandEvaluator
     combinations = [[hand[0]], [hand[1]], hand]
 
     combinations.each do |player_cards|
-      value, hand = get_all_card_combinations(player_cards, table) 
+      value, hand = get_all_card_combinations(player_cards, table)
       hand_value, winning_hand = value, hand if value > hand_value
     end
     [hand_value, winning_hand]
@@ -71,7 +71,7 @@ class HandEvaluator
 
     #There are 5 total combinations, make situational in case I need to call in dif circumstance
     (0..4).each do |skip_index|
-      hand = [player_cards[0]] 
+      hand = [player_cards[0]]
       (0..4).each do |current_index|
         if current_index != skip_index
           hand << table[current_index]
@@ -85,7 +85,7 @@ class HandEvaluator
 
   def get_hand_value(hand)
     hand.sort!{ |x,y| get_face_value(x[0]) <=> get_face_value(y[0])}
-    faces, suits = split_hand(hand) 
+    faces, suits = split_hand(hand)
     get_face_values(faces)
     get_suit_values(suits)
 
@@ -93,7 +93,7 @@ class HandEvaluator
     flush_eval = check_for_flush(suits.uniq)
     straight_eval = check_for_straight(faces)
     straight_flush = (straight_eval > 0 && flush_eval > 0) ? 168000 + straight_eval : -1
-    
+
     hand_value = [multiples_eval, flush_eval, straight_eval, straight_flush, faces[4]].max
     [hand_value, hand]
   end
@@ -105,7 +105,7 @@ class HandEvaluator
   def check_for_multiples(faces)
     multiples = faces.select {|face| faces.count(face) > 1}
     multiples.uniq!
-    
+
     if multiples.size == 1
       case number = faces.count(multiples[0])
       when 2
@@ -159,7 +159,7 @@ class HandEvaluator
     when "Three of a Kind"
       (1 + args[0]) * 100 #Range: 300-1500
     when "Straight"
-      args[0] * 400 #Range: 2000-5600 
+      args[0] * 400 #Range: 2000-5600
     when "Flush"
       5800
     when "Full House"
@@ -168,7 +168,7 @@ class HandEvaluator
       (2 + args[0]) * 10000 #Range: 40000 - 160000
     else
       puts "You should never be here!"
-    end  
+    end
   end
 
   def get_suit_values(suits)
