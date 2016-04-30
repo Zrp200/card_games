@@ -26,8 +26,8 @@ class HandEvaluator
   end
 
   def get_hand_value(hand)
-    hand.sort!{ |x,y| Cards.get_face_value(x[0]) <=> Cards.get_face_value(y[0])}
-    faces, suits = split_hand(hand)
+    faces = hand.map(&:face)
+    suits = hand.map(&:suit)
     get_face_values(faces)
     get_suit_values(suits)
     multiples_eval = check_for_multiples(faces)
@@ -95,10 +95,6 @@ class HandEvaluator
       hand_value, winning_hand = value, hand if value > hand_value
     end
     [hand_value, winning_hand]
-  end
-
-  def split_hand(hand)
-    faces, suits = hand.map { |card| [card[0..1], card[2]] }.transpose
   end
 
   def check_for_multiples(faces)
@@ -170,10 +166,10 @@ class HandEvaluator
   end
 
   def get_suit_values(suits)
-    suits.map! {|suit| suit = Cards.get_suit_value(suit)}
+    suits.map! { |suit| Card.suit_values[suit] }
   end
 
   def get_face_values(faces)
-    faces.map! {|face| Cards.get_face_value(face)}
+    faces.map! { |face| Card.face_values[face] }
   end
 end

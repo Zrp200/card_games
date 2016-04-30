@@ -1,48 +1,26 @@
+require_relative './card'
+
 module Cards
-  SUIT_VALUES = {
-    '♣' => 0,
-    '♦' => 1,
-    '♥' => 2,
-    '♠' => 3
-  }
-
-  FACE_VALUES = {
-    ' 2' => 2,
-    ' 3' => 3,
-    ' 4' => 4,
-    ' 5' => 5,
-    ' 6' => 6,
-    ' 7' => 7,
-    ' 8' => 8,
-    ' 9' => 9,
-    '10' => 10,
-    ' J' => 11,
-    ' Q' => 12,
-    ' K' => 13,
-    ' A' => 14
-  }
-
-  SUITS = SUIT_VALUES.keys
-  FACES = FACE_VALUES.keys
-
   extend self
 
   def build_deck(number_of_cards)
     deck = []
     iterations = number_of_cards / 4
-    SUITS.each do |suit|
+    suits.each do |suit|
       (0...iterations).each do |face|
-        deck << (FACES[face] + suit)
+        deck << Card.new(faces[face], suit)
       end
     end
     deck
   end
 
-  def get_suit_value(suit)
-    SUIT_VALUES[suit]
+  private
+
+  def faces
+    Card.face_values.keys
   end
 
-  def get_face_value(face)
-    FACE_VALUES[face]
+  def suits
+    Card.suit_values.keys
   end
 end

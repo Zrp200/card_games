@@ -7,7 +7,7 @@ class TexasHoldemDealer
   attr_reader :players
 
   def initialize(bet_manager, hand_evaluator, players)
-    @table = []
+    @table = Hand.new
     @bet_manager = bet_manager
     @players = players
     @ante_queue = players.dup
@@ -66,12 +66,8 @@ class TexasHoldemDealer
     end
   end
 
-  #Add functionality to say what step in the deal it is
-  #Should I make a separate class that handles the view?
   def display_cards
-    currently_in_game.each do |player|
-      puts "#{player.name}: #{player.hand}"
-    end
+    currently_in_game.each { |player| puts player }
     puts "Table: #{table}"
     puts '------------'
     puts '------------'
@@ -84,7 +80,7 @@ class TexasHoldemDealer
   end
 
   def determine_winner
-    hand_value, winning_hand = get_hand_value(table)
+    hand_value, winning_hand = get_hand_value(table.cards)
     winning_player = "The table"
     #change this to only examine players currently in the game
     @players.each do |player|
@@ -95,11 +91,11 @@ class TexasHoldemDealer
   end
 
   def get_hand_value(hand)
-    hand_evaluator.get_hand_value(table)
+    hand_evaluator.get_hand_value(table.cards)
   end
 
   def evaluate_hands(hand, table)
-    hand_evaluator.evaluate_hands(hand, table)
+    hand_evaluator.evaluate_hands(hand.cards, table.cards)
   end
 
   def get_hand_name(hand_value)
