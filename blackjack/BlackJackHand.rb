@@ -1,3 +1,0 @@
-class BlackJackHand
-
-end

@@ -1,0 +1,1 @@
+BlackJackHand = Class.new
