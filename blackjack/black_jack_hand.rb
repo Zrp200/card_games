@@ -1,3 +1,1 @@
-class BlackJackHand
-
-end
+BlackJackHand = Class.new

@@ -1,2 +1,1 @@
-class GameEngine
-end
+GameEngine = Class.new
