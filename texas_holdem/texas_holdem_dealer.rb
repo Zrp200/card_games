@@ -4,8 +4,6 @@ require_relative './player.rb'
 require_relative './hand_evaluator.rb'
 
 class TexasHoldemDealer
-  include Cards
-
   attr_reader :players
 
   def initialize(bet_manager, hand_evaluator, players)
@@ -18,7 +16,7 @@ class TexasHoldemDealer
   end
 
   def play_game
-    @deck = build_deck(52)
+    @deck = Cards.build_deck(52)
   end
 
   def hole_cards

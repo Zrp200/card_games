@@ -1,8 +1,6 @@
 require_relative '../cards.rb'
 
 class HandEvaluator
-  include Cards
-
   HAND_NAME = {
     2..14 => 'High Card', 20..140 => 'a Pair', 153..274 => 'Two Pair',
     300..1500 => 'Three of a Kind', 2000..5600 => 'a Straight', 5800 => 'a Flush',
@@ -28,7 +26,7 @@ class HandEvaluator
   end
 
   def get_hand_value(hand)
-    hand.sort!{ |x,y| get_face_value(x[0]) <=> get_face_value(y[0])}
+    hand.sort!{ |x,y| Cards.get_face_value(x[0]) <=> Cards.get_face_value(y[0])}
     faces, suits = split_hand(hand)
     get_face_values(faces)
     get_suit_values(suits)
@@ -172,10 +170,10 @@ class HandEvaluator
   end
 
   def get_suit_values(suits)
-    suits.map! {|suit| suit = get_suit_value(suit)}
+    suits.map! {|suit| suit = Cards.get_suit_value(suit)}
   end
 
   def get_face_values(faces)
-    faces.map! {|face| get_face_value(face)}
+    faces.map! {|face| Cards.get_face_value(face)}
   end
 end

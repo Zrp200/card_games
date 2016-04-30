@@ -1,8 +1,4 @@
 module Cards
-  #Enum for cards
-  #sends a deck to the dealer when asked
-  #perhaps supply an optional arg for modifying the deck
-
   SUIT_VALUES = {
     '♣' => 0,
     '♦' => 1,
@@ -29,7 +25,7 @@ module Cards
   SUITS = SUIT_VALUES.keys
   FACES = FACE_VALUES.keys
 
-  private
+  extend self
 
   def build_deck(number_of_cards)
     deck = []
