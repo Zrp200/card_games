@@ -129,10 +129,10 @@ while true
 	game.the_flop
 	game.the_turn
 	game.the_river
-	puts '*******'
-	game.players.each do |player|
-		puts player.chips 
-	end
+	#puts '*******'
+	#game.players.each do |player|
+	#	puts player.chips 
+	#end
 	break
 	#if game.play_again 
 	#	game.new_round
