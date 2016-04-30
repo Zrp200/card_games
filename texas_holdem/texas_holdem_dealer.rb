@@ -51,10 +51,6 @@ class TexasHoldemDealer
 
   attr_reader :bet_manager, :currently_in_game, :deck, :hand_evaluator, :table
 
-  def collect_antes
-    bet_manager.collect_antes(ante_queue)
-  end
-
   def deal(num_of_cards, num_of_deals, location)
     (1..num_of_deals).each do
       card_one, card_two, card_three = deck.sample(num_of_cards)
@@ -114,9 +110,6 @@ class TexasHoldemDealer
 
   def award_pot(player)
     bet_manager.award_pot(player)
-  end
-
-  def play_again?
   end
 end
 

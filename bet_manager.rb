@@ -22,14 +22,6 @@ class BetManager
 
   attr_reader :max_bet, :min_bet, :pot, :total_bet
 
-  def manage_antes(ante_queue)
-    (1..2).time do |number|
-      player = ante_queue.shift
-      pot += player.get_chips(ante_amout/number)
-      ante_queue.push(player)
-    end
-  end
-
   def manage_betting_order(players)
     bets, checks_or_calls = 0, 0
     still_in_game = players
