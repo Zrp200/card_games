@@ -120,11 +120,8 @@ game = TexasHoldemDealer.new(HoldemBetManager.new, HandEvaluator.new,
   [Player.new("Hays"), Player.new("Computer 1"), Player.new("Computer 2"), Player.new("Computer 3")])
 game.play_game
 
-while true
-  game.hole_cards
-  game.the_flop
-  game.the_turn
-  game.the_river
-  puts '*******'
-  break
-end
+game.hole_cards
+game.the_flop
+game.the_turn
+game.the_river
+puts '*******'
