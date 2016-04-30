@@ -4,7 +4,7 @@ class Player
 
 	def initialize(name)
 		@hand = []
-		@chips = 10000 #could probably change this to user input
+		@chips = 10000
 		@name = name
 		@current_bet = 0
 		#@folded = false

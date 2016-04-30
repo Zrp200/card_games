@@ -12,8 +12,8 @@ class TexasHoldemDealer
 		@table = []
 		@bet_manager = bet_manager
 		@players = players
-		@ante_queue = players
-		@currently_in_game = players
+		@ante_queue = players.dup
+		@currently_in_game = players.dup
 		@hand_evaluator = hand_evaluator
 	end
 
@@ -96,23 +96,17 @@ class TexasHoldemDealer
 		#change this to only examine players currently in the game
 		@players.each do |player|
 			value, hand = evaluate_hand(player.hand, @table)
-			hand_value, winning_hand, winning_player = value, hand, player.name if value > hand_value
+			hand_value, winning_hand, winning_player = value, hand, player if value > hand_value
 		end
 		hand_name = get_hand_name(hand_value)
-		puts "#{winning_player} wins #{bet_manager.award_pot} with #{hand_name}."
-	end
-
-	def get_hand_value(hand)
-		@hand_evaluator.get_hand_value(hand)
-	end
-
-	def evaluate_hand(hand, table)
-		@hand_evaluator.evaluate_hand(hand, table)
+		puts "#{winning_player.name} wins #{bet_manager.pot} with #{hand_name}."
 	end
 
 	def get_hand_name(hand_value)
 		@hand_evaluator.get_hand_name(hand_value)
 	end
+
+	def play_again?
 end
 
 
@@ -126,8 +120,11 @@ while true
 	game.the_turn
 	game.the_river
 	break
-	#game.play_again ?  next : break
-	#game.new_round #reset what needs to be reset here
+	#if game.play_again 
+	#	game.new_round
+	#else
+	#	break
+	#end
 end
 
 

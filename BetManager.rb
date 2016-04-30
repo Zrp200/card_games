@@ -86,10 +86,11 @@ class BetManager
 	end
 
 	def get_bet(player)
-		if player.current_bet > 0 #They have been raised
+		if player.current_bet > 0
+			#When asking to raise, it will say by full amount instead of difference
 			puts "#{player.name}: Would you like to 'Call' the raise of #{total_bet - player.current_bet}, re-raise ('#{min_bet} - #{max_bet}') or 'Fold'?"
 			input = $stdin.gets.strip.downcase
-		elsif player.current_bet == 0 && total_bet > 0 # they have not yet bet
+		elsif player.current_bet == 0 && total_bet > 0 
 			puts "#{player.name}: Would you like to 'Call' the bet of #{total_bet - player.current_bet}, re-raise ('#{min_bet} - #{max_bet}'), or 'Fold'?"
 			input = $stdin.gets.strip.downcase
 		elsif player.current_bet == 0
@@ -112,8 +113,10 @@ class BetManager
 	end
 
 	def award_pot(player)
-		player.chips += pot.to_s.to_i
+		pot_value = pot
+		player.chips += pot
 		@pot = 0
+		pot_value
 	end
 end
 

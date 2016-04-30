@@ -3,13 +3,11 @@ require_relative '../Cards.rb'
 class HandEvaluator
 	include Cards
 
-	#NEITHER STRAIGHT OR STRAIGHT FLUSH ARE CONSIDERING THE WHEEL RIGHT NOW!!!
-
 	HAND_NAME = {
 		2..14 => 'High Card', 20..140 => 'a Pair', 153..274 => 'Two Pair', 
 		300..1500 => 'Three of a Kind', 2000..5600 => 'a Straight', 5800 => 'a Flush', 
 		6030..30130 => 'a Full House', 40000..160000 => 'Four of a Kind',
-		1000000..1000013 => 'a Straight Flush', 1000014 => 'a Royal Flush'
+		170000..173200 => 'a Straight Flush', 173600 => 'a Royal Flush'
 	}
 
 	def evaluate_hand(hand, table)	
@@ -39,7 +37,7 @@ class HandEvaluator
 		hand_value = 0
 		winning_hand = []
 
-		#There are 10 total combinations, , make situational in case I need to call in dif circumstance
+		#There are 10 total combinations, make situational in case I need to call in dif circumstance
 		10.times do ||
 			hand = [player_cards[0], player_cards[1]]
 			if z == 4 && y == 3 && x == 2
@@ -91,11 +89,12 @@ class HandEvaluator
 		get_face_values(faces)
 		get_suit_values(suits)
 
-		multiples_evaluation = check_for_multiples(faces)
-		flush_evaluation = check_for_flush(suits.uniq)
-		straight_evaluation = check_for_straight(faces)
-		straight_flush = (straight_evaluation > 0 && flush_evaluation > 0) ? 1000000 + faces[4] : -1
-		hand_value = [multiples_evaluation, flush_evaluation, straight_evaluation, straight_flush, faces[4]].max
+		multiples_eval = check_for_multiples(faces)
+		flush_eval = check_for_flush(suits.uniq)
+		straight_eval = check_for_straight(faces)
+		straight_flush = (straight_eval > 0 && flush_eval > 0) ? 168000 + straight_eval : -1
+		
+		hand_value = [multiples_eval, flush_eval, straight_eval, straight_flush, faces[4]].max
 		[hand_value, hand]
 	end
 
@@ -144,6 +143,8 @@ class HandEvaluator
 	def check_for_straight(faces)
 		if faces.sort.each_cons(2).all? { |x,y| y == x + 1 }
 			score("Straight", faces[4])
+		elsif faces == [2, 3, 4, 5, 14]
+			score("Straight", faces[3])
 		else
 			-1
 		end
@@ -181,16 +182,5 @@ class HandEvaluator
 	def get_hand_name(hand_value)
 		HAND_NAME.select {|range| range === hand_value}.values.first
 	end
-
 end
-
-#hand_evaluator = HandEvaluator.new()
-#hand = ['Ac', '7h']
-#table = ['Ad', 'Ac', 'Ac', 'Kc', 'Tc']
-
-#hand_value, winning_hand = hand_evaluator.evaluate_hand(hand, table)
-#puts '----------'
-#puts hand_value
-#puts winning_hand
-#puts '----------'
 
