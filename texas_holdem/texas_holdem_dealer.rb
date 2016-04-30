@@ -47,6 +47,10 @@ class TexasHoldemDealer
     determine_winner
   end
 
+  private
+
+  attr_reader :bet_manager, :currently_in_game, :deck, :hand_evaluator, :table
+
   def collect_antes
     bet_manager.collect_antes(ante_queue)
   end
@@ -114,10 +118,6 @@ class TexasHoldemDealer
 
   def play_again?
   end
-
-  private
-
-  attr_reader :bet_manager, :currently_in_game, :deck, :hand_evaluator, :table
 end
 
 game = TexasHoldemDealer.new(HoldemBetManager.new, HandEvaluator.new,

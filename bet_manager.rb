@@ -1,14 +1,26 @@
 #May need to make this more abstract as I add more games that use it
 #RIGHT NOW, NOT HAVING ENOUGH MONEY RESULTS IN YOU FOLDING FOR THE HAND; WILL NEED TO INTRODUCE SIDE POTS
 class BetManager
-  attr_reader :award_pot
-
   def initialize
     @pot = 0
     @min_bet = 50
     @max_bet = 500
     @total_bet = 0
   end
+
+  #the player is only getting what the other person bet, not its money back
+  #if a player bets at end and another player folds, the original player does not
+  #get its money back
+  def award_pot(player)
+    pot_value = pot
+    player.chips += pot
+    @pot = 0
+    pot_value
+  end
+
+  private
+
+  attr_reader :max_bet, :min_bet, :pot, :total_bet
 
   def manage_antes(ante_queue)
     (1..2).time do |number|
@@ -108,18 +120,4 @@ class BetManager
     end
     @total_bet = 0
   end
-
-  #the player is only getting what the other person bet, not its money back
-  #if a player bets at end and another player folds, the original player does not
-  #get its money back
-  def award_pot(player)
-    pot_value = pot
-    player.chips += pot
-    @pot = 0
-    pot_value
-  end
-
-  private
-
-  attr_reader :max_bet, :min_bet, :pot, :total_bet
 end

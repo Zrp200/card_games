@@ -29,6 +29,8 @@ module Cards
   SUITS = SUIT_VALUES.keys
   FACES = FACE_VALUES.keys
 
+  private
+
   def build_deck(number_of_cards)
     deck = []
     iterations = number_of_cards / 4

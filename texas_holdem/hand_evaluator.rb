@@ -23,6 +23,25 @@ class HandEvaluator
     [hand_value, winning_hand]
   end
 
+  def get_hand_name(hand_value)
+    HAND_NAME.select {|range| range === hand_value}.values.first
+  end
+
+  def get_hand_value(hand)
+    hand.sort!{ |x,y| get_face_value(x[0]) <=> get_face_value(y[0])}
+    faces, suits = split_hand(hand)
+    get_face_values(faces)
+    get_suit_values(suits)
+    multiples_eval = check_for_multiples(faces)
+    flush_eval = check_for_flush(suits.uniq)
+    straight_eval = check_for_straight(faces)
+    straight_flush = (straight_eval > 0 && flush_eval > 0) ? 168000 + straight_eval : -1
+    hand_value = [multiples_eval, flush_eval, straight_eval, straight_flush, faces[4]].max
+    [hand_value, hand]
+  end
+
+  private
+
   def get_all_card_combinations(player_cards, table)
     if player_cards.size == 1
       combinations_with_one_card(player_cards, table)
@@ -78,19 +97,6 @@ class HandEvaluator
       hand_value, winning_hand = value, hand if value > hand_value
     end
     [hand_value, winning_hand]
-  end
-
-  def get_hand_value(hand)
-    hand.sort!{ |x,y| get_face_value(x[0]) <=> get_face_value(y[0])}
-    faces, suits = split_hand(hand)
-    get_face_values(faces)
-    get_suit_values(suits)
-    multiples_eval = check_for_multiples(faces)
-    flush_eval = check_for_flush(suits.uniq)
-    straight_eval = check_for_straight(faces)
-    straight_flush = (straight_eval > 0 && flush_eval > 0) ? 168000 + straight_eval : -1
-    hand_value = [multiples_eval, flush_eval, straight_eval, straight_flush, faces[4]].max
-    [hand_value, hand]
   end
 
   def split_hand(hand)
@@ -171,9 +177,5 @@ class HandEvaluator
 
   def get_face_values(faces)
     faces.map! {|face| get_face_value(face)}
-  end
-
-  def get_hand_name(hand_value)
-    HAND_NAME.select {|range| range === hand_value}.values.first
   end
 end
