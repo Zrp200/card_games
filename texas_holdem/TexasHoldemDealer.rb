@@ -63,7 +63,7 @@ class TexasHoldemDealer
 	end
 
 	def deal_to_players(player_cards)
-		players.each do |player|
+		currently_in_game.each do |player|
 			player.hand << player_cards.shift
 			player.hand << player_cards.shift
 		end
@@ -72,10 +72,8 @@ class TexasHoldemDealer
 	#Add functionality to say what step in the deal it is
 	#Should I make a separate class that handles the view?
 	def display_cards
-		player_number = 1
-		players.each do |player|
+		currently_in_game.each do |player|
 			puts "#{player.name}: #{player.get_hand}"
-			player_number += 1
 		end
 		puts "Table: #{table}"
 		#sleep(2)
@@ -95,18 +93,30 @@ class TexasHoldemDealer
 
 		#change this to only examine players currently in the game
 		@players.each do |player|
-			value, hand = evaluate_hand(player.hand, @table)
+			value, hand = evaluate_hands(player.hand, @table)
 			hand_value, winning_hand, winning_player = value, hand, player if value > hand_value
 		end
-		hand_name = get_hand_name(hand_value)
-		puts "#{winning_player.name} wins #{bet_manager.pot} with #{hand_name}."
+		puts "#{winning_player.name} wins #{award_pot(winning_player)} with #{get_hand_name(hand_value)}."
+	end
+
+	def get_hand_value(hand)
+		hand_evaluator.get_hand_value(table)
+	end
+
+	def evaluate_hands(hand, table)
+		hand_evaluator.evaluate_hands(hand, table)
 	end
 
 	def get_hand_name(hand_value)
-		@hand_evaluator.get_hand_name(hand_value)
+		hand_evaluator.get_hand_name(hand_value)
+	end
+
+	def award_pot(player)
+		bet_manager.award_pot(player)
 	end
 
 	def play_again?
+	end
 end
 
 
@@ -119,6 +129,10 @@ while true
 	game.the_flop
 	game.the_turn
 	game.the_river
+	puts '*******'
+	game.players.each do |player|
+		puts player.chips 
+	end
 	break
 	#if game.play_again 
 	#	game.new_round

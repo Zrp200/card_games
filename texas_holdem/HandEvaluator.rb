@@ -10,7 +10,7 @@ class HandEvaluator
 		170000..173200 => 'a Straight Flush', 173600 => 'a Royal Flush'
 	}
 
-	def evaluate_hand(hand, table)	
+	def evaluate_hands(hand, table)	
 		suits = []
 		faces = []
 		hand_value = -1
