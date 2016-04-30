@@ -7,7 +7,7 @@ class BetManager
 		@pot = 0
 		@min_bet = 50
 		@max_bet = 500
-		@total_bet = 500
+		@total_bet = 0
 	end
 
 
@@ -21,9 +21,9 @@ class BetManager
 
 	def manage_betting_order(players)
 		bets, checks_or_calls = 0, 0
-		
+		still_in_game = players
 		while players.size > 1 && bets + checks_or_calls < players.size
-			player = players.shift
+			player = still_in_game.shift
 			player_bet = get_bet_value(player)
 
 			if player_bet.is_a?(Fixnum)
@@ -38,10 +38,10 @@ class BetManager
 				bet = player.get_chips(total_bet-player.current_bet)
 				add_to_pot(bet)
 			end
-			puts "About to be pushed"
-			players.push(player)
+			still_in_game.push(player)
 		end
-		players
+		reset_bets(players)
+		still_in_game
 	end
 
 	def get_bet_value(player)
@@ -102,6 +102,13 @@ class BetManager
 
 	def add_to_pot(bet)
 		@pot = pot + bet
+	end
+
+	def reset_bets(players)
+		players.each do |player|
+			player.current_bet = 0
+		end
+		@total_bet = 0
 	end
 
 	def award_pot(player)

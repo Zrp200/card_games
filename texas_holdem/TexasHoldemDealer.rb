@@ -99,7 +99,7 @@ class TexasHoldemDealer
 			hand_value, winning_hand, winning_player = value, hand, player.name if value > hand_value
 		end
 		hand_name = get_hand_name(hand_value)
-		puts "#{winning_player} won with #{hand_name}."
+		puts "#{winning_player} wins #{bet_manager.award_pot} with #{hand_name}."
 	end
 
 	def get_hand_value(hand)
