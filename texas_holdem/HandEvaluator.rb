@@ -100,7 +100,7 @@ class HandEvaluator
 	end
 
 	def split_hand(hand)
-		faces, suits = hand.map {|card| card.split('')}.transpose
+		faces, suits = hand.map { |card| [card[0..1], card[2]] }.transpose
 	end
 
 	def check_for_multiples(faces)
