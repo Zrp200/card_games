@@ -1,4 +1,4 @@
-require_relative '../BetManager.rb'
+require_relative '../bet_manager.rb'
 
 class HoldemBetManager < BetManager
 

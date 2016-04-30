@@ -1,7 +1,7 @@
-require_relative '../Cards.rb'
-require_relative './HoldemBetManager.rb'
-require_relative './Player.rb'
-require_relative './HandEvaluator.rb'
+require_relative '../cards.rb'
+require_relative './holdem_bet_manager.rb'
+require_relative './player.rb'
+require_relative './hand_evaluator.rb'
 
 class TexasHoldemDealer
   include Cards

@@ -1,4 +1,4 @@
-require_relative '../Cards.rb'
+require_relative '../cards.rb'
 
 class HandEvaluator
   include Cards
