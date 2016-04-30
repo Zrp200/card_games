@@ -10,7 +10,6 @@ class BetManager
     @total_bet = 0
   end
 
-
   def manage_antes(ante_queue)
     (1..2).time do |number|
       player = ante_queue.shift
@@ -25,7 +24,6 @@ class BetManager
     while players.size > 1 && bets + checks_or_calls < players.size
       player = still_in_game.shift
       player_bet = get_bet_value(player)
-
       if player_bet.is_a?(Fixnum)
         bets, checks_or_calls = 1, 0
         @total_bet = total_bet.to_s.to_i + player.get_chips(player_bet)
@@ -65,7 +63,6 @@ class BetManager
           break
         end
       end
-
       bet = response.match(/[0-9]*/).to_s.to_i
       if bet < min_bet || bet > max_bet
         next
@@ -122,8 +119,3 @@ class BetManager
     pot_value
   end
 end
-
-#x = BetManager.new
-#puts bet = x.manage_betters()
-
-

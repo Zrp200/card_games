@@ -16,7 +16,6 @@ class HandEvaluator
     hand_value = -1
     winning_hand = []
     combinations = [[hand[0]], [hand[1]], hand]
-
     combinations.each do |player_cards|
       value, hand = get_all_card_combinations(player_cards, table)
       hand_value, winning_hand = value, hand if value > hand_value
@@ -36,7 +35,6 @@ class HandEvaluator
     x, y, z = 0, 1, 2
     hand_value = 0
     winning_hand = []
-
     #There are 10 total combinations, make situational in case I need to call in dif circumstance
     10.times do ||
       hand = [player_cards[0], player_cards[1]]
@@ -68,7 +66,6 @@ class HandEvaluator
   def combinations_with_one_card(player_cards, table)
     hand_value = 0
     winning_hand = []
-
     #There are 5 total combinations, make situational in case I need to call in dif circumstance
     (0..4).each do |skip_index|
       hand = [player_cards[0]]
@@ -88,12 +85,10 @@ class HandEvaluator
     faces, suits = split_hand(hand)
     get_face_values(faces)
     get_suit_values(suits)
-
     multiples_eval = check_for_multiples(faces)
     flush_eval = check_for_flush(suits.uniq)
     straight_eval = check_for_straight(faces)
     straight_flush = (straight_eval > 0 && flush_eval > 0) ? 168000 + straight_eval : -1
-
     hand_value = [multiples_eval, flush_eval, straight_eval, straight_flush, faces[4]].max
     [hand_value, hand]
   end
@@ -105,7 +100,6 @@ class HandEvaluator
   def check_for_multiples(faces)
     multiples = faces.select {|face| faces.count(face) > 1}
     multiples.uniq!
-
     if multiples.size == 1
       case number = faces.count(multiples[0])
       when 2
@@ -183,4 +177,3 @@ class HandEvaluator
     HAND_NAME.select {|range| range === hand_value}.values.first
   end
 end
-

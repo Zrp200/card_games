@@ -19,7 +19,6 @@ class TexasHoldemDealer
 
   def play_game
     @deck = build_deck(52)
-    #collect_antes
   end
 
   def hole_cards
@@ -76,7 +75,6 @@ class TexasHoldemDealer
       puts "#{player.name}: #{player.get_hand}"
     end
     puts "Table: #{table}"
-    #sleep(2)
     puts '------------'
     puts '------------'
   end
@@ -90,7 +88,6 @@ class TexasHoldemDealer
   def determine_winner
     hand_value, winning_hand = get_hand_value(table)
     winning_player = "The table"
-
     #change this to only examine players currently in the game
     @players.each do |player|
       value, hand = evaluate_hands(player.hand, @table)
@@ -119,7 +116,6 @@ class TexasHoldemDealer
   end
 end
 
-
 game = TexasHoldemDealer.new(HoldemBetManager.new, HandEvaluator.new,
   [Player.new("Hays"), Player.new("Computer 1"), Player.new("Computer 2"), Player.new("Computer 3")])
 game.play_game
@@ -131,14 +127,4 @@ while true
   game.the_river
   puts '*******'
   break
-  #if game.play_again
-  #  game.new_round
-  #else
-  #  break
-  #end
 end
-
-
-
-
-

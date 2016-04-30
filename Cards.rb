@@ -2,7 +2,6 @@ module Cards
   #Enum for cards
   #sends a deck to the dealer when asked
   #perhaps supply an optional arg for modifying the deck
-  #attr_accessor :SUIT_VALUES, :FACE_VALUES
 
   SUIT_VALUES = {
     '♣' => 0,
@@ -33,13 +32,11 @@ module Cards
   def build_deck(number_of_cards)
     deck = []
     iterations = number_of_cards / 4
-
     SUITS.each do |suit|
       (0...iterations).each do |face|
         deck << (FACES[face] + suit)
       end
     end
-
     deck
   end
 
