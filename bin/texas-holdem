@@ -10,8 +10,3 @@ names = %w(Hays Computer\ 1 Computer\ 2 Computer\ 3)
 players = names.map { |name| Player.new name }
 game = TexasHoldemDealer.new BetManager.new, HandEvaluator.new, players
 game.play_game
-game.hole_cards
-game.the_flop
-game.the_turn
-game.the_river
-puts '*******'
