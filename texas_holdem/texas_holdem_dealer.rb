@@ -85,7 +85,7 @@ class TexasHoldemDealer
   end
 
   def determine_winner
-    hand_value, winning_hand = get_hand_value(@table.cards)
+    hand_value, winning_hand = @hand_evaluator.get_hand_value(@table.sorted_cards)
     winning_player = Player.new 'The table'
     #change this to only examine players currently in the game
     @currently_in_game.each do |player|
@@ -93,10 +93,6 @@ class TexasHoldemDealer
       hand_value, winning_hand, winning_player = value, hand, player if value > hand_value
     end
     puts "#{winning_player.name} wins #{award_pot(winning_player)} with #{get_hand_name(hand_value)}."
-  end
-
-  def get_hand_value(hand)
-    @hand_evaluator.get_hand_value(@table.cards)
   end
 
   def get_hand_name(hand_value)
