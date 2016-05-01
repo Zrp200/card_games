@@ -3,6 +3,7 @@ require_relative './player.rb'
 
 class TexasHoldemDealer
   def initialize(bet_manager, hand_evaluator, players)
+    @deck = Deck.new
     @table = Player.new 'Table'
     @bet_manager = bet_manager
     @currently_in_game = players
@@ -10,7 +11,6 @@ class TexasHoldemDealer
   end
 
   def play_game
-    @deck = Deck.new
     hole_cards
     the_flop
     the_turn
