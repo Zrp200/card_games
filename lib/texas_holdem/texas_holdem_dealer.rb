@@ -3,37 +3,36 @@ require_relative './player.rb'
 
 class TexasHoldemDealer
   def initialize(bet_manager, hand_evaluator, players)
-    @table = Hand.new
+    @table = Player.new 'Table'
     @bet_manager = bet_manager
     @currently_in_game = players
     @hand_evaluator = hand_evaluator
   end
 
   def play_game
-    @deck = Deck.deck
+    @deck = Deck.new
   end
 
   def hole_cards
-    player_cards = deal(2, 4, [])
-    deal_to_players(player_cards)
+    @deck.deal 2, *@currently_in_game
     display_cards
     bet
   end
 
   def the_flop
-    deal_to_table(3, 1)
+    @deck.deal 3, @table
     display_cards
     bet
   end
 
   def the_turn
-    deal_to_table(1, 1)
+    @deck.deal 1, @table
     display_cards
     bet
   end
 
   def the_river
-    deal_to_table(1, 1)
+    @deck.deal 1, @table
     display_cards
     bet
     determine_winner
@@ -41,35 +40,9 @@ class TexasHoldemDealer
 
   private
 
-  def deal(num_of_cards, num_of_deals, location)
-    (1..num_of_deals).each do
-      card_one, card_two, card_three = @deck.sample(num_of_cards)
-      @deck.delete(card_one) and location.push(card_one) unless card_one == nil
-      @deck.delete(card_two) and location.push(card_two) unless card_two == nil
-      @deck.delete(card_three) and location.push(card_three) unless card_three == nil
-    end
-    location
-  end
-
-  def deal_to_players(player_cards)
-    @currently_in_game.each do |player|
-      player.hand << player_cards.shift
-      player.hand << player_cards.shift
-    end
-  end
-
-  def deal_to_table(num_of_cards, num_of_deals)
-    (1..num_of_deals).each do
-      card_one, card_two, card_three = @deck.sample(num_of_cards)
-      @deck.delete(card_one) and @table.push(card_one) unless card_one == nil
-      @deck.delete(card_two) and @table.push(card_two) unless card_two == nil
-      @deck.delete(card_three) and @table.push(card_three) unless card_three == nil
-    end
-  end
-
   def display_cards
     @currently_in_game.each { |player| puts player }
-    puts "Table: #{@table}"
+    puts @table
     puts '------------'
     puts '------------'
   end
@@ -81,11 +54,11 @@ class TexasHoldemDealer
   end
 
   def determine_winner
-    hand_value, winning_hand = @hand_evaluator.get_hand_value(@table.sorted_cards)
-    winning_player = Player.new 'The table'
+    hand_value, winning_hand = @hand_evaluator.get_hand_value(@table.hand.sorted_cards)
+    winning_player = @table
     #change this to only examine players currently in the game
     @currently_in_game.each do |player|
-      value, hand = @hand_evaluator.evaluate_hands(player.hand.cards, @table.cards)
+      value, hand = @hand_evaluator.evaluate_hands(player.hand.cards, @table.hand.cards)
       hand_value, winning_hand, winning_player = value, hand, player if value > hand_value
     end
     puts "#{winning_player.name} wins #{award_pot(winning_player)} with #{get_hand_name(hand_value)}."

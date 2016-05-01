@@ -1,16 +1,28 @@
 require_relative './card'
 
-module Deck
-  extend self
+class Deck
+  def initialize
+    @cards = new_deck
+  end
 
-  def deck
-    suits.flat_map { |suit| faces.map { |face| Card.new face, suit } }
+  def deal count, *players
+    count.times { players.each { |player| deal_one_to player } }
   end
 
   private
 
+  def deal_one_to player
+    return unless card = @cards.sample
+    player.hand << card
+    @cards.delete card
+  end
+
   def faces
     Card.face_values.keys
+  end
+
+  def new_deck
+    suits.flat_map { |suit| faces.map { |face| Card.new face, suit } }
   end
 
   def suits
