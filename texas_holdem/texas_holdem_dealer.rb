@@ -86,7 +86,7 @@ class TexasHoldemDealer
 
   def determine_winner
     hand_value, winning_hand = get_hand_value(@table.cards)
-    winning_player = "The table"
+    winning_player = Player.new 'The table'
     #change this to only examine players currently in the game
     @currently_in_game.each do |player|
       value, hand = @hand_evaluator.evaluate_hands(player.hand.cards, @table.cards)
