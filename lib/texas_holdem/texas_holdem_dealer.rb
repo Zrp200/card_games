@@ -1,4 +1,4 @@
-require_relative '../cards.rb'
+require_relative './cards.rb'
 require_relative './holdem_bet_manager.rb'
 require_relative './player.rb'
 require_relative './hand_evaluator.rb'
