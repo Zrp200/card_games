@@ -3,15 +3,8 @@ require_relative './card'
 module Cards
   extend self
 
-  def build_deck(number_of_cards)
-    deck = []
-    iterations = number_of_cards / 4
-    suits.each do |suit|
-      (0...iterations).each do |face|
-        deck << Card.new(faces[face], suit)
-      end
-    end
-    deck
+  def deck
+    suits.flat_map { |suit| faces.map { |face| Card.new face, suit } }
   end
 
   private

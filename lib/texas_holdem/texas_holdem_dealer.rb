@@ -12,7 +12,7 @@ class TexasHoldemDealer
   end
 
   def play_game
-    @deck = Cards.build_deck(52)
+    @deck = Cards.deck
   end
 
   def hole_cards
