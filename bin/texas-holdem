@@ -1,8 +1,12 @@
 #!/usr/bin/env ruby
 $LOAD_PATH.unshift(File.expand_path('../../lib', __FILE__))
+
+require 'texas_holdem/bet_manager'
+require 'texas_holdem/hand_evaluator'
+require 'texas_holdem/player'
 require 'texas_holdem/texas_holdem_dealer'
 
-game = TexasHoldemDealer.new HoldemBetManager.new,
+game = TexasHoldemDealer.new BetManager.new,
                              HandEvaluator.new,
                              [Player.new("Hays"),
                               Player.new("Computer 1"),

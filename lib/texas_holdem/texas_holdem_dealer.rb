@@ -1,7 +1,5 @@
 require_relative './cards.rb'
-require_relative './holdem_bet_manager.rb'
 require_relative './player.rb'
-require_relative './hand_evaluator.rb'
 
 class TexasHoldemDealer
   def initialize(bet_manager, hand_evaluator, players)
