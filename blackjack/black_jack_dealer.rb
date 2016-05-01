@@ -1,1 +1,0 @@
-BlackJackDealer = Class.new
