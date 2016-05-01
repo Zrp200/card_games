@@ -5,9 +5,7 @@ class TexasHoldemDealer
   def initialize(bet_manager, hand_evaluator, players)
     @table = Hand.new
     @bet_manager = bet_manager
-    @players = players
-    @ante_queue = players.dup
-    @currently_in_game = players.dup
+    @currently_in_game = players
     @hand_evaluator = hand_evaluator
   end
 
