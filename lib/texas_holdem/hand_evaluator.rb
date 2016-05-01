@@ -1,4 +1,4 @@
-require_relative './card.rb'
+require_relative './deck.rb'
 
 class HandEvaluator
   HAND_NAME = {
@@ -166,10 +166,10 @@ class HandEvaluator
   end
 
   def get_suit_values(suits)
-    suits.map! { |suit| Card.suit_values[suit] }
+    suits.map! { |suit| Deck.suit_values[suit] }
   end
 
   def get_face_values(faces)
-    faces.map! { |face| Card.face_values[face] }
+    faces.map! { |face| Deck.face_values[face] }
   end
 end
