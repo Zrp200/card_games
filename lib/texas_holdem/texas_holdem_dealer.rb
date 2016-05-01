@@ -46,14 +46,21 @@ class TexasHoldemDealer
   end
 
   def determine_winner
-    hand_value, winning_hand = @hand_evaluator.get_hand_value(@table.hand.sorted_cards)
     winning_player = @table
-    #change this to only examine players currently in the game
+    hand_value, winning_hand =
+      @hand_evaluator.get_hand_value(@table.hand.sorted_cards)
     @currently_in_game.each do |player|
-      value, hand = @hand_evaluator.evaluate_hands(player.hand.cards, @table.hand.cards)
-      hand_value, winning_hand, winning_player = value, hand, player if value > hand_value
+      value, hand = @hand_evaluator.evaluate_hands(player.hand.cards,
+                                                   @table.hand.cards)
+      if value > hand_value
+        hand_value = value
+        winning_hand = hand
+        winning_player = player
+      end
     end
-    puts "#{winning_player.name} wins #{award_pot(winning_player)} with #{get_hand_name(hand_value)}."
+    award = @bet_manager.award_pot winning_player
+    hand_name = @hand_evaluator.get_hand_name(hand_value)
+    puts "#{winning_player.name} wins #{award} with #{hand_name}."
   end
 
   def display_cards
@@ -67,13 +74,5 @@ class TexasHoldemDealer
     players_who_bet = @bet_manager.bet(@currently_in_game)
     #Make sure betting order doesn't get messed up here
     @currently_in_game = players_who_bet
-  end
-
-  def get_hand_name(hand_value)
-    @hand_evaluator.get_hand_name(hand_value)
-  end
-
-  def award_pot(player)
-    @bet_manager.award_pot(player)
   end
 end
