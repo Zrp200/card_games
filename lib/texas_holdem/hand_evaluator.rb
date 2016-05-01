@@ -1,4 +1,4 @@
-require_relative './cards.rb'
+require_relative './card.rb'
 
 class HandEvaluator
   HAND_NAME = {

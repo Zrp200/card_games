@@ -1,6 +1,6 @@
 require 'texas_holdem/bet_manager'
 require 'texas_holdem/card'
-require 'texas_holdem/cards'
+require 'texas_holdem/deck'
 require 'texas_holdem/hand'
 require 'texas_holdem/hand_evaluator'
 require 'texas_holdem/player'

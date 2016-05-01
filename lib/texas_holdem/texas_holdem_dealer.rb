@@ -1,4 +1,4 @@
-require_relative './cards.rb'
+require_relative './deck.rb'
 require_relative './player.rb'
 
 class TexasHoldemDealer
@@ -12,7 +12,7 @@ class TexasHoldemDealer
   end
 
   def play_game
-    @deck = Cards.deck
+    @deck = Deck.deck
   end
 
   def hole_cards

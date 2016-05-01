@@ -1,6 +1,6 @@
 require_relative './card'
 
-module Cards
+module Deck
   extend self
 
   def deck
