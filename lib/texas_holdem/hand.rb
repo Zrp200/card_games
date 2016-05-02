@@ -8,7 +8,6 @@ class Hand
   def << card
     cards << card
   end
-  alias_method :push, :<<
 
   def sorted_cards
     cards.sort_by(&:face_value)
