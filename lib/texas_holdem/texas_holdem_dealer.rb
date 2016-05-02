@@ -1,4 +1,4 @@
-require_relative './bet_manager'
+require_relative './pot'
 require_relative './hand_evaluator'
 require_relative './deck'
 require_relative './player'
@@ -7,7 +7,7 @@ class TexasHoldemDealer
   def initialize players
     @deck = Deck.new
     @table = Player.new 'Table'
-    @bet_manager = BetManager.new
+    @pot = Pot.new
     @currently_in_game = players
   end
 
@@ -59,7 +59,7 @@ class TexasHoldemDealer
         winning_player = player
       end
     end
-    award = @bet_manager.award_pot winning_player
+    award = @pot.award_pot winning_player
     hand_name = evaluator.get_hand_name winning_value
     puts "#{winning_player.name} wins #{award} with #{hand_name}."
   end
@@ -71,9 +71,94 @@ class TexasHoldemDealer
     puts '------------'
   end
 
+
+
+          ### --- Betting --- ###
+
+
   def bet
-    players_who_bet = @bet_manager.bet(@currently_in_game)
-    #Make sure betting order doesn't get messed up here
-    @currently_in_game = players_who_bet
+    manage_betting_order
+  end
+
+  def manage_betting_order
+    bets, checks_or_calls = 0, 0
+    while @currently_in_game.size > 1 && bets + checks_or_calls < @currently_in_game.size
+      player = @currently_in_game.shift
+      player_bet = get_bet_value(player)
+      if player_bet.is_a?(Fixnum)
+        bets, checks_or_calls = 1, 0
+        @pot.total_bet += player.get_chips(player_bet)
+      elsif player_bet == "fold"
+        next
+      elsif player_bet == "check"
+        checks_or_calls += 1
+      else
+        checks_or_calls += 1
+        bet = player.get_chips(@pot.total_bet-player.current_bet)
+        @pot.add_to_pot(bet)
+      end
+      @currently_in_game.push(player)
+    end
+    reset_bets
+  end
+
+  def get_bet_value(player)
+    bet = 0
+    while true
+      response = get_bet(player)
+      if response == "fold"
+        break
+      elsif response == "check"
+        if @pot.total_bet > player.current_bet
+          puts "Incorrect input"
+          next
+        else
+          break
+        end
+      elsif response == "call"
+        if @pot.total_bet == 0
+          puts "Incorrect input"
+          next
+        else
+          break
+        end
+      end
+      bet = response.match(/[0-9]*/).to_s.to_i
+      if bet < @pot.min_bet || bet > @pot.max_bet
+        next
+      elsif bet > 0
+        #Will need to alter this later for side pots
+        #Should I wait to add to the pot?
+        if bet > player.chips #THIS IS WHERE SIDEBETS WOULD COME INTO PLAY
+          return "fold"
+        else
+          return bet
+        end
+      else
+        puts "Incorrect input"
+        next
+      end
+    end
+    response
+  end
+
+  def get_bet(player)
+    if player.current_bet > 0
+      puts "#{player.name}: Would you like to 'Call' the raise of #{@pot.total_bet - player.current_bet}, re-raise ('#{@pot.min_bet} - #{@pot.max_bet}') or 'Fold'?"
+      input = $stdin.gets.strip.downcase
+    elsif player.current_bet == 0 && @pot.total_bet > 0
+      puts "#{player.name}: Would you like to 'Call' the bet of #{@pot.total_bet - player.current_bet}, raise ('#{@pot.min_bet} - #{@pot.max_bet}'), or 'Fold'?"
+      input = $stdin.gets.strip.downcase
+    elsif player.current_bet == 0
+      puts "#{player.name}: Would you like to bet ('#{@pot.min_bet} - #{@pot.max_bet}'), 'Check', 'Fold'?"
+      input = $stdin.gets.strip.downcase
+    else
+      puts "You should not be here!"
+    end
+  end
+
+  def reset_bets
+    @pot.total_bet = 0
+    @currently_in_game.each { |player| player.reset_bet }
   end
 end
