@@ -1,13 +1,6 @@
 require_relative './deck.rb'
 
 class HandEvaluator
-  HAND_NAME = {
-    2..14 => 'High Card', 20..140 => 'a Pair', 153..274 => 'Two Pair',
-    300..1500 => 'Three of a Kind', 2000..5600 => 'a Straight', 5800 => 'a Flush',
-    6030..30130 => 'a Full House', 40000..160000 => 'Four of a Kind',
-    170000..173200 => 'a Straight Flush', 173600 => 'a Royal Flush'
-  }
-
   def evaluate_hands(hand, table)
     suits = []
     faces = []
@@ -19,10 +12,6 @@ class HandEvaluator
       hand_value, winning_hand = value, hand if value > hand_value
     end
     [hand_value, winning_hand]
-  end
-
-  def get_hand_name(hand_value)
-    HAND_NAME.select {|range| range === hand_value}.values.first
   end
 
   def get_hand_value(hand)
