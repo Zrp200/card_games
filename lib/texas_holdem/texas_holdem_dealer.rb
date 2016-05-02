@@ -49,17 +49,18 @@ class TexasHoldemDealer
   def determine_winner
     evaluator = HandEvaluator.new
     winning_player = @table
-    hand_value, winning_hand = evaluator.get_hand_value @table.hand.sorted_cards
+    winning_hand = @table.hand.sorted_cards
+    winning_value = evaluator.get_hand_value winning_hand
     @currently_in_game.each do |player|
       value, hand = evaluator.evaluate_hands player.hand.cards, @table.hand.cards
-      if value > hand_value
-        hand_value = value
+      if value > winning_value
+        winning_value = value
         winning_hand = hand
         winning_player = player
       end
     end
     award = @bet_manager.award_pot winning_player
-    hand_name = evaluator.get_hand_name(hand_value)
+    hand_name = evaluator.get_hand_name winning_value
     puts "#{winning_player.name} wins #{award} with #{hand_name}."
   end
 
