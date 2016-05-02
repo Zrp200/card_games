@@ -1,4 +1,4 @@
-require_relative './cards.rb'
+require_relative './deck.rb'
 
 class HandEvaluator
   HAND_NAME = {
@@ -34,8 +34,7 @@ class HandEvaluator
     flush_eval = check_for_flush(suits.uniq)
     straight_eval = check_for_straight(faces)
     straight_flush = (straight_eval > 0 && flush_eval > 0) ? 168000 + straight_eval : -1
-    hand_value = [multiples_eval, flush_eval, straight_eval, straight_flush, faces[4]].max
-    [hand_value, hand]
+    [multiples_eval, flush_eval, straight_eval, straight_flush, faces[4]].max
   end
 
   private
@@ -57,22 +56,22 @@ class HandEvaluator
       hand = [player_cards[0], player_cards[1]]
       if z == 4 && y == 3 && x == 2
         hand += [table[x], table[y], table[z]]
-        value, hand = get_hand_value(hand)
+        value = get_hand_value(hand)
         hand_value, winning_hand = value, hand if value > hand_value
         break
       elsif z == 4 && y == 3
         hand += [table[x], table[y], table[z]]
-        value, hand = get_hand_value(hand)
+        value = get_hand_value(hand)
         hand_value, winning_hand = value, hand if value > hand_value
         x += 1; y = x + 1; z = y + 1;
       elsif z == 4
         hand += [table[x], table[y], table[z]]
-        value, hand = get_hand_value(hand)
+        value = get_hand_value(hand)
         hand_value, winning_hand = value, hand if value > hand_value
         y += 1; z = y + 1;
       else
         hand += [table[x], table[y], table[z]]
-        value, hand = get_hand_value(hand)
+        value = get_hand_value(hand)
         hand_value, winning_hand = value, hand if value > hand_value
         z += 1;
       end
@@ -91,7 +90,7 @@ class HandEvaluator
           hand << table[current_index]
         end
       end
-      value, hand =  get_hand_value(hand)
+      value = get_hand_value(hand)
       hand_value, winning_hand = value, hand if value > hand_value
     end
     [hand_value, winning_hand]
@@ -166,10 +165,10 @@ class HandEvaluator
   end
 
   def get_suit_values(suits)
-    suits.map! { |suit| Card.suit_values[suit] }
+    suits.map! { |suit| Deck.suit_values[suit] }
   end
 
   def get_face_values(faces)
-    faces.map! { |face| Card.face_values[face] }
+    faces.map! { |face| Deck.face_values[face] }
   end
 end

@@ -1,79 +1,72 @@
-require_relative './cards.rb'
-require_relative './holdem_bet_manager.rb'
-require_relative './player.rb'
-require_relative './hand_evaluator.rb'
+require_relative './bet_manager'
+require_relative './hand_evaluator'
+require_relative './deck'
+require_relative './player'
 
 class TexasHoldemDealer
-  def initialize(bet_manager, hand_evaluator, players)
-    @table = Hand.new
-    @bet_manager = bet_manager
-    @players = players
-    @ante_queue = players.dup
-    @currently_in_game = players.dup
-    @hand_evaluator = hand_evaluator
+  def initialize players
+    @deck = Deck.new
+    @table = Player.new 'Table'
+    @bet_manager = BetManager.new
+    @currently_in_game = players
   end
 
   def play_game
-    @deck = Cards.build_deck(52)
-  end
-
-  def hole_cards
-    player_cards = deal(2, 4, [])
-    deal_to_players(player_cards)
-    display_cards
-    bet
-  end
-
-  def the_flop
-    deal_to_table(3, 1)
-    display_cards
-    bet
-  end
-
-  def the_turn
-    deal_to_table(1, 1)
-    display_cards
-    bet
-  end
-
-  def the_river
-    deal_to_table(1, 1)
-    display_cards
-    bet
+    hole_cards
+    the_flop
+    the_turn
+    the_river
+    puts '*******'
     determine_winner
   end
 
   private
 
-  def deal(num_of_cards, num_of_deals, location)
-    (1..num_of_deals).each do
-      card_one, card_two, card_three = @deck.sample(num_of_cards)
-      @deck.delete(card_one) and location.push(card_one) unless card_one == nil
-      @deck.delete(card_two) and location.push(card_two) unless card_two == nil
-      @deck.delete(card_three) and location.push(card_three) unless card_three == nil
-    end
-    location
+  def hole_cards
+    @deck.deal 2, *@currently_in_game
+    display_cards
+    bet
   end
 
-  def deal_to_players(player_cards)
+  def the_flop
+    @deck.deal 3, @table
+    display_cards
+    bet
+  end
+
+  def the_turn
+    @deck.deal 1, @table
+    display_cards
+    bet
+  end
+
+  def the_river
+    @deck.deal 1, @table
+    display_cards
+    bet
+  end
+
+  def determine_winner
+    evaluator = HandEvaluator.new
+    winning_player = @table
+    winning_hand = @table.hand.sorted_cards
+    winning_value = evaluator.get_hand_value winning_hand
     @currently_in_game.each do |player|
-      player.hand << player_cards.shift
-      player.hand << player_cards.shift
+      value, hand = evaluator.evaluate_hands player.hand.cards, @table.hand.cards
+      if value > winning_value
+        winning_value = value
+        winning_hand = hand
+        winning_player = player
+      end
     end
-  end
-
-  def deal_to_table(num_of_cards, num_of_deals)
-    (1..num_of_deals).each do
-      card_one, card_two, card_three = @deck.sample(num_of_cards)
-      @deck.delete(card_one) and @table.push(card_one) unless card_one == nil
-      @deck.delete(card_two) and @table.push(card_two) unless card_two == nil
-      @deck.delete(card_three) and @table.push(card_three) unless card_three == nil
-    end
+    award = @bet_manager.award_pot winning_player
+    hand_name = evaluator.get_hand_name winning_value
+    puts "#{winning_player.name} wins #{award} with #{hand_name}."
   end
 
   def display_cards
     @currently_in_game.each { |player| puts player }
-    puts "Table: #{@table}"
+    puts @table
     puts '------------'
     puts '------------'
   end
@@ -82,24 +75,5 @@ class TexasHoldemDealer
     players_who_bet = @bet_manager.bet(@currently_in_game)
     #Make sure betting order doesn't get messed up here
     @currently_in_game = players_who_bet
-  end
-
-  def determine_winner
-    hand_value, winning_hand = @hand_evaluator.get_hand_value(@table.sorted_cards)
-    winning_player = Player.new 'The table'
-    #change this to only examine players currently in the game
-    @currently_in_game.each do |player|
-      value, hand = @hand_evaluator.evaluate_hands(player.hand.cards, @table.cards)
-      hand_value, winning_hand, winning_player = value, hand, player if value > hand_value
-    end
-    puts "#{winning_player.name} wins #{award_pot(winning_player)} with #{get_hand_name(hand_value)}."
-  end
-
-  def get_hand_name(hand_value)
-    @hand_evaluator.get_hand_name(hand_value)
-  end
-
-  def award_pot(player)
-    @bet_manager.award_pot(player)
   end
 end

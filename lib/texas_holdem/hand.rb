@@ -8,7 +8,11 @@ class Hand
   def << card
     cards << card
   end
-  alias_method :push, :<<
+
+  def combined_with hand
+    combined_cards = cards + hand.cards
+    self.class.new *combined_cards
+  end
 
   def sorted_cards
     cards.sort_by(&:face_value)

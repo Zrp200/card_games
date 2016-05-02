@@ -1,10 +1,7 @@
-%w(
-  bet_manager
-  card
-  cards
-  hand
-  hand_evaluator
-  holdem_bet_manager
-  player
-  texas_holdem_dealer
-).each { |file| require "texas_holdem/#{file}" }
+require 'texas_holdem/bet_manager'
+require 'texas_holdem/card'
+require 'texas_holdem/deck'
+require 'texas_holdem/hand'
+require 'texas_holdem/hand_evaluator'
+require 'texas_holdem/player'
+require 'texas_holdem/texas_holdem_dealer'

@@ -1,16 +1,10 @@
 #!/usr/bin/env ruby
 $LOAD_PATH.unshift(File.expand_path('../../lib', __FILE__))
+
+require 'texas_holdem/player'
 require 'texas_holdem/texas_holdem_dealer'
 
-game = TexasHoldemDealer.new HoldemBetManager.new,
-                             HandEvaluator.new,
-                             [Player.new("Hays"),
-                              Player.new("Computer 1"),
-                              Player.new("Computer 2"),
-                              Player.new("Computer 3")]
+names = %w(Hays Computer\ 1 Computer\ 2 Computer\ 3)
+players = names.map { |name| Player.new name }
+game = TexasHoldemDealer.new players
 game.play_game
-game.hole_cards
-game.the_flop
-game.the_turn
-game.the_river
-puts '*******'

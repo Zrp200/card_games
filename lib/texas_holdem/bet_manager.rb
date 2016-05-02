@@ -8,6 +8,10 @@ class BetManager
     @total_bet = 0
   end
 
+  def bet(players)
+    manage_betting_order(players)
+  end
+
   #the player is only getting what the other person bet, not its money back
   #if a player bets at end and another player folds, the original player does not
   #get its money back
