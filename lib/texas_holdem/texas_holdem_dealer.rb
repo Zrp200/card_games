@@ -1,13 +1,14 @@
-require_relative './deck.rb'
-require_relative './player.rb'
+require_relative './bet_manager'
+require_relative './hand_evaluator'
+require_relative './deck'
+require_relative './player'
 
 class TexasHoldemDealer
-  def initialize(bet_manager, hand_evaluator, players)
+  def initialize players
     @deck = Deck.new
     @table = Player.new 'Table'
-    @bet_manager = bet_manager
+    @bet_manager = BetManager.new
     @currently_in_game = players
-    @hand_evaluator = hand_evaluator
   end
 
   def play_game
@@ -46,12 +47,11 @@ class TexasHoldemDealer
   end
 
   def determine_winner
+    evaluator = HandEvaluator.new
     winning_player = @table
-    hand_value, winning_hand =
-      @hand_evaluator.get_hand_value(@table.hand.sorted_cards)
+    hand_value, winning_hand = evaluator.get_hand_value @table.hand.sorted_cards
     @currently_in_game.each do |player|
-      value, hand = @hand_evaluator.evaluate_hands(player.hand.cards,
-                                                   @table.hand.cards)
+      value, hand = evaluator.evaluate_hands player.hand.cards, @table.hand.cards
       if value > hand_value
         hand_value = value
         winning_hand = hand
@@ -59,7 +59,7 @@ class TexasHoldemDealer
       end
     end
     award = @bet_manager.award_pot winning_player
-    hand_name = @hand_evaluator.get_hand_name(hand_value)
+    hand_name = evaluator.get_hand_name(hand_value)
     puts "#{winning_player.name} wins #{award} with #{hand_name}."
   end
 
