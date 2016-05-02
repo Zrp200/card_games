@@ -9,6 +9,11 @@ class Hand
     cards << card
   end
 
+  def combined_with hand
+    combined_cards = cards + hand.cards
+    self.class.new *combined_cards
+  end
+
   def sorted_cards
     cards.sort_by(&:face_value)
   end
