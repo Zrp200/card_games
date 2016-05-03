@@ -5,16 +5,16 @@ class Hand
 
   class << self
     def names
-      [['High Card'       ,      2..    14],
-       ['a Pair'          ,     20..   140],
-       ['Two Pair'        ,    153..   274],
-       ['Three of a Kind' ,    300..  1500],
-       ['a Straight'      ,   2000..  5600],
-       ['a Flush'         ,   5800        ],
-       ['a Full House'    ,   6030.. 30130],
-       ['Four of a Kind'  ,  40000..160000],
-       ['a Straight Flush', 170000..173200],
-       ['a Royal Flush'   , 173600        ]]
+      [['High Card'       , 111110..111170  ],
+       ['a Pair'          , 1111008..1111056],
+       ['Two Pair'        , 9999999999],
+       ['Three of a Kind' , 9999999999],
+       ['a Straight'      , 9999999999],
+       ['a Flush'         , 9999999999],
+       ['a Full House'    , 9999999999],
+       ['Four of a Kind'  , 9999999999],
+       ['a Straight Flush', 9999999999],
+       ['a Royal Flush'   , 9999999999]]
     end
   end
 
@@ -32,7 +32,7 @@ class Hand
 
   def combined_with hand
     combined_cards = cards + hand.cards
-    self.class.new *combined_cards
+    self.class.new(*combined_cards)
   end
 
   def name
@@ -52,8 +52,8 @@ class Hand
   protected
 
   def value
-    return pair * 10 if pair
-    face_values.max
+    return pair if pair
+    high_card
   end
 
   private
@@ -66,8 +66,30 @@ class Hand
     face_values.each_with_object(Hash.new(0)) { |v, c| c[v] += 1 }
   end
 
+  def high_card
+    values = face_values
+    values[0] + (values[1] +100) + third_highest_card(values[2]) + second_highest_card(values[3]) + highest_card(values[4])
+  end
+
+  def highest_card(value)
+    value + 100000
+  end
+
+  def second_highest_card(value)
+    value + 10000    
+  end
+
+  def third_highest_card(value)
+    value + 1000
+  end
+
   def pair
     pair_and_count = face_value_counts.find { |_, v| v > 1 }
-    pair_and_count && pair_and_count.first
+    return pair_plus_high_cards(face_value_counts, pair_and_count.first) if pair_and_count
+  end
+
+  def pair_plus_high_cards(face_value_counts, card)
+    high_cards = face_values.delete(card)
+    return highest_card(face_value_counts[2]) + second_highest_card(face_value_counts[1]) + third_highest_card(face_value_counts[1]) + card + 1000000
   end
 end
