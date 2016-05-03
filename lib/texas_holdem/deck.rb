@@ -1,29 +1,6 @@
+require_relative './card'
+
 class Deck
-  class << self
-    def face_values
-      { ' 2' => 2,
-        ' 3' => 3,
-        ' 4' => 4,
-        ' 5' => 5,
-        ' 6' => 6,
-        ' 7' => 7,
-        ' 8' => 8,
-        ' 9' => 9,
-        '10' => 10,
-        ' J' => 11,
-        ' Q' => 12,
-        ' K' => 13,
-        ' A' => 14 }
-    end
-
-    def suit_values
-      { '♣' => 0,
-        '♦' => 1,
-        '♥' => 2,
-        '♠' => 3 }
-    end
-  end
-
   def initialize
     @cards = new_deck
   end
@@ -41,7 +18,7 @@ class Deck
   end
 
   def faces
-    self.class.face_values.keys
+    Card.faces
   end
 
   def new_deck
@@ -49,6 +26,6 @@ class Deck
   end
 
   def suits
-    self.class.suit_values.keys
+    Card.suits
   end
 end
