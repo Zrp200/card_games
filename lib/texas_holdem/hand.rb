@@ -7,14 +7,14 @@ class Hand
 
   class << self
     def names
-      [['High Card'       , 1..14 ],
-       ['a Pair'          , 15..28],
-       ['Two Pair'        , 113043054  ],
-       ['Three of a Kind' , 210927012..1475899084],
-       ['a Straight'      , 9999999999],
-       ['a Flush'         , 9999999999],
-       ['a Full House'    , 9999999999],
-       ['Four of a Kind'  , 9999999999],
+      [['High Card'       , 2..14 ],
+       ['a Pair'          , 15..27],
+       ['Two Pair'        , 28..40],
+       ['Three of a Kind' , 41..53],
+       ['a Straight'      , 54..63],
+       ['a Flush'         , 64..73],
+       ['a Full House'    , 74..86],
+       ['Four of a Kind'  , 87..99],
        ['a Straight Flush', 9999999999],
        ['a Royal Flush'   , 9999999999]]
     end
@@ -56,8 +56,12 @@ class Hand
   protected
 
   def value
-    #return three_of_a_kind if three_of_a_kind
-    #return two_pair if two_pair
+    return quads if quads
+    return full_house if full_house
+    return flush if flush
+    return straight if straight
+    return trips if trips
+    return two_pair if two_pair
     return pair if pair
     high_card
   end
@@ -68,71 +72,63 @@ class Hand
 
   private
 
+  def high_card
+    return face_values.max
+  end
+
+  def pair
+    pair = face_value_counts.find { |_,count| count == 2 }
+    return pair[0] + 13 if pair
+  end
+
+  def two_pair
+    two_pair = face_value_counts.select { |_,count| count == 2 }
+    return two_pair.keys.max + 26 if two_pair.size > 1
+  end
+
+  def trips
+    trips = face_value_counts.select { |_,count| count == 3 }
+    return trips.keys[0] + 39 if trips.size > 0
+  end
+
+  def straight
+    return face_values.max + 49 if face_values.each_cons(2).all? { |x,y| y == x + 1 }
+    return 54 if face_values == [2, 3, 4, 5, 14]
+  end
+
+  def flush
+    return face_values.max + 59 if suit_values.uniq.size == 1
+  end
+
+  def full_house
+    multiples = face_value_counts.select { |_, count| count >= 2 }
+    return multiples.find { |card, count| count == 3 }[0] + 72 if multiples.values.include?(3)
+  end
+
+  def quads
+    quad = face_value_counts.select { |_, count| count == 4 }
+    return quad.keys[0] + 85 if quad.size > 0
+  end
+
+  def straight_flush
+
+  end
+
   def face_values
     sorted_cards.map(&:face_value)
+  end
+
+  def suit_values
+    sorted_cards.map(&:suit_value)
   end
 
   def face_value_counts
     face_values.each_with_object(Hash.new(0)) { |v, c| c[v] += 1 }
   end
 
-  def delete_calculated_value(card)
-      face_values.delete(card)
-  end
-
-  def high_card
-    return face_values.max
-  end
-
-  def pair
-    pair_and_count = face_value_counts.find { |_, v| v > 1 }
-    return pair_plus_high_cards(face_value_counts, pair_and_count.first) if pair_and_count
-  end
-
-  def pair_plus_high_cards(face_value_counts, card)
-    face_value_counts.delete(card)
-    face_value_counts = face_value_counts.keys
-    return highest_card_value(face_value_counts[2]) + second_highest_card_value(face_value_counts[1]) +
-     third_highest_card_value(face_value_counts[0]) + pair_value(card) 
-  end
-
-  def two_pair
-    pairs_and_count = face_value_counts.select { |_, v| v > 1 }
-    if pairs_and_count.size > 1
-      pair1 = pairs_and_count.shift
-      pair2 = pairs_and_count.shift
-      return two_pair_and_high_card(pair2[0], pair1[0], face_value_counts.keys)
-    else
-      return false
-    end
-  end
-
-  def two_pair_and_high_card(high_pair, low_pair, high_card)
-    high_card.delete(high_pair)
-    high_card.delete(low_pair)
-    return two_pair_value(high_pair) + pair_value(low_pair) + highest_card_value(high_card.first)
-  end
-
-  def three_of_a_kind
-    trip = face_value_counts.select { |_, v| v > 2 }
-    if trip.size > 0
-      return three_of_a_kind_and_high_cards(trip, face_value_counts.keys)
-    else
-      return false
-    end
-  end
-
-  def three_of_a_kind_and_high_cards(trip, high_cards)
+  def get_multiples(number)
 
   end
 
   
-
-  def pair_value value
-    value * 537824
-  end
-
-  def two_pair_value value 
-    value * 7529536
-  end
 end

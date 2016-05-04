@@ -4,6 +4,7 @@ require_relative '../../lib/texas_holdem/hand'
 
 class HandTest < Minitest::Test
   def test_high_card
+    skip
     cards = [
       Card.new(:two  , :hearts  ),
       Card.new(:seven, :hearts  ),
@@ -15,19 +16,7 @@ class HandTest < Minitest::Test
     assert_equal 'High Card', hand.name
   end
 
-  def test_higher_card_wins
-    higher = Hand.new Card.new(:two  , :hearts  ),
-                      Card.new(:seven, :hearts  ),
-                      Card.new(:eight, :spades  ),
-                      Card.new(:ten  , :spades  ),
-                      Card.new(:king , :diamonds)
-    lower = Hand.new Card.new(:two  , :diamonds),
-                     Card.new(:seven, :spades  ),
-                     Card.new(:eight, :clubs   ),
-                     Card.new(:ten  , :clubs   ),
-                     Card.new(:jack , :diamonds)
-    assert(higher > lower)
-  end
+ 
 
   def test_pair_is_pair
     skip
@@ -40,6 +29,79 @@ class HandTest < Minitest::Test
     ]
     hand = Hand.new(*cards)
     assert_equal 'a Pair', hand.name
+  end
+
+  def test_two_pair_is_two_pair
+    skip
+    hand = Hand.new Card.new(:two, :hearts   ),
+                    Card.new(:seven, :hearts ),
+                    Card.new(:seven, :spades ),
+                    Card.new(:king, :spades  ),
+                    Card.new(:king, :diamonds)
+    assert_equal 'Two Pair', hand.name
+  end
+
+  def test_trips_is_trips
+    skip
+    hand = Hand.new Card.new(:two, :hearts   ),
+                    Card.new(:king, :hearts  ),
+                    Card.new(:seven, :spades ),
+                    Card.new(:king, :spades  ),
+                    Card.new(:king, :diamonds)
+    assert_equal 'Three of a Kind', hand.name
+  end
+
+  def test_straight_is_straight
+    skip
+    hand = Hand.new Card.new(:two, :hearts  ),
+                    Card.new(:three, :hearts),
+                    Card.new(:four, :spades ),
+                    Card.new(:five, :spades ),
+                    Card.new(:six, :diamonds)
+    assert_equal 'a Straight', hand.name
+  end
+
+  def test_flush_is_flush
+    skip
+    hand = Hand.new Card.new(:two, :spades  ),
+                    Card.new(:three, :spades),
+                    Card.new(:four, :spades ),
+                    Card.new(:king, :spades ),
+                    Card.new(:six, :spades  )
+    assert_equal 'a Flush', hand.name
+  end
+
+  def test_full_house_is_full_house
+    hand = Hand.new Card.new(:two, :hearts   ),
+                    Card.new(:two, :spades   ),
+                    Card.new(:two, :spades   ),
+                    Card.new(:king, :diamonds),
+                    Card.new(:king, :spades  )
+    assert_equal 'a Full House', hand.name
+  end
+
+  def test_quads_is_quads
+    hand = Hand.new Card.new(:two, :hearts   ),
+                    Card.new(:two, :spades   ),
+                    Card.new(:two, :spades   ),
+                    Card.new(:two, :diamonds ),
+                    Card.new(:king, :spades  )
+    assert_equal 'Four of a Kind', hand.name
+  end
+
+  def test_higher_card_wins
+    skip
+    higher = Hand.new Card.new(:two  , :hearts  ),
+                      Card.new(:seven, :hearts  ),
+                      Card.new(:eight, :spades  ),
+                      Card.new(:ten  , :spades  ),
+                      Card.new(:king , :diamonds)
+    lower = Hand.new Card.new(:two  , :diamonds),
+                     Card.new(:seven, :spades  ),
+                     Card.new(:eight, :clubs   ),
+                     Card.new(:ten  , :clubs   ),
+                     Card.new(:jack , :diamonds)
+    assert(higher > lower)
   end
 
   def test_next_highest_card_wins_one
@@ -194,16 +256,6 @@ class HandTest < Minitest::Test
     assert(higher > lower)
   end
 
-  def test_two_pair_is_two_pair
-    skip
-    hand = Hand.new Card.new(:two, :hearts   ),
-                    Card.new(:seven, :hearts ),
-                    Card.new(:seven, :spades ),
-                    Card.new(:king, :spades  ),
-                    Card.new(:king, :diamonds)
-    assert_equal 'Two Pair', hand.name
-  end
-
   def test_highest_pair_of_two_pair_wins
     skip
     higher = Hand.new Card.new(:four, :hearts ),
@@ -247,15 +299,5 @@ class HandTest < Minitest::Test
                      Card.new(:ace, :clubs    ),
                      Card.new(:ace, :hearts   )
     assert(higher > lower)
-  end
-  
-  def test_trips_are_trips
-    skip
-    hand = Hand.new Card.new(:two, :hearts   ),
-                    Card.new(:king, :hearts  ),
-                    Card.new(:seven, :spades ),
-                    Card.new(:king, :spades  ),
-                    Card.new(:king, :diamonds)
-    assert_equal 'Three of a Kind', hand.name
   end
 end
