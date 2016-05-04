@@ -1,13 +1,19 @@
 require_relative './hand'
 
 class Player
+<<<<<<< HEAD
   attr_accessor :chips, :current_bet
   attr_reader :name
+=======
+  attr_accessor :chips, :current_bet, :total_bet
+  attr_reader :hand, :name
+>>>>>>> e537aa73d66750111afed197f595395cd2664eef
 
   def initialize(name)
     @hand = Hand.new
     @chips = 10000
     @name = name
+    @total_bet = 0
     @current_bet = 0
   end
 
@@ -23,5 +29,10 @@ class Player
 
   def to_s
     "#{name}: #{hand}"
+  end
+
+  def reset_bet
+    self.total_bet += self.current_bet
+    self.current_bet = 0
   end
 end
