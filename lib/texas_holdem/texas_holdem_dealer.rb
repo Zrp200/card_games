@@ -5,6 +5,7 @@ require_relative './player'
 
 class TexasHoldemDealer
   def initialize players
+    @players = players
     @deck = Deck.new
     @table = Player.new 'Table'
     @pot = Pot.new
@@ -42,6 +43,7 @@ class TexasHoldemDealer
   alias the_river the_turn
 
   def determine_winner
+    #examine each hand 
     winning_player = @table
     winning_hand = @table.hand
     @currently_in_game.each do |player|
@@ -146,6 +148,6 @@ class TexasHoldemDealer
 
   def reset_bets
     @pot.total_bet = 0
-    @currently_in_game.each { |player| player.reset_bet }
+    @players.each { |player| player.reset_bet }
   end
 end
