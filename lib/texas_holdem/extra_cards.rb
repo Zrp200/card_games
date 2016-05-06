@@ -8,10 +8,10 @@ class ExtraCards
   end
 
   def <=> anOther
-    cards.reverse <=> anOther.cards.reverse
+    @cards.reverse <=> anOther.cards.reverse
   end
 
   def << card
-    cards << card
+    @cards << card
   end
 end

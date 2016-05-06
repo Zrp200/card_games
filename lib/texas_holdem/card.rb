@@ -1,31 +1,11 @@
-class Card
+﻿class Card
   attr_reader :face, :suit
-
-  class << self
-    def face_displays
-      Hash[faces.zip %w(2 3 4 5 6 7 8 9 10 J Q K A)]
-    end
-
-    def face_values
-      Hash[faces.zip 2..14]
-    end
-
-    def faces
-      %i(two three four five six seven eight nine ten jack queen king ace)
-    end
-
-    def suit_displays
-      Hash[suits.zip %w(♣ ♦ ♥ ♠)]
-    end
-
-    def suit_values
-      Hash[suits.zip 0..3]
-    end
-
-    def suits
-      %i(clubs diamonds hearts spades)
-    end
-  end
+  Faces = %i(two three four five six seven eight nine ten jack queen king)
+  FaceDisplays = Hash[ Faces.zip %w(2 3 4 5 6 7 8 9 10 J Q K A) ]
+  FaceValues = Hash[Faces.zip 2..14]
+  Suits = %i(clubs diamonds hearts spades)
+  SuitDisplays = Hash[ Suits.zip %w(♣ ♦ ♥ ♠) ]
+  SuitValues = Hash[ Suits.zip 0..3]
 
   def initialize face, suit
     @face = face
@@ -33,24 +13,14 @@ class Card
   end
 
   def face_value
-    self.class.face_values[face]
+    FaceValues.fetch @face
   end
 
   def suit_value
-    self.class.suit_values[suit]
+    SuitValues.fetch @suit
   end
 
   def to_s
-    "#{face_display}#{suit_display}"
-  end
-
-  private
-
-  def face_display
-    self.class.face_displays[face]
-  end
-
-  def suit_display
-    self.class.suit_displays[suit]
+    "#{FaceDisplays.fetch @face}#{SuitDisplays @suit}"
   end
 end

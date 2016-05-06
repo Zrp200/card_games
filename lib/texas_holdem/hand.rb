@@ -4,21 +4,18 @@ class Hand
   include Comparable
 
   attr_reader :cards, :extra_cards
-
-  class << self
-    def names
-      [['High Card'       , 2..14   ],
-       ['a Pair'          , 15..27  ],
-       ['Two Pair'        , 28..41  ],
-       ['Three of a Kind' , 42..54  ],
-       ['a Straight'      , 55..64  ],
-       ['a Flush'         , 65..74  ],
-       ['a Full House'    , 75..87  ],
-       ['Four of a Kind'  , 88..100 ],
-       ['a Straight Flush', 101..109],
-       ['a Royal Flush'   , 110     ]]
-    end
-  end
+  Names = [
+	['High Card'       , 2..14   ],
+       	['a Pair'          , 15..27  ],
+       	['Two Pair'        , 28..41  ],
+       	['Three of a Kind' , 42..54  ],
+       	['a Straight'      , 55..64  ],
+       	['a Flush'         , 65..74  ],
+       	['a Full House'    , 75..87  ],
+       	['Four of a Kind'  , 88..100 ],
+       	['a Straight Flush', 101..109],
+       	['a Royal Flush'   , 110     ]
+  ]
 
   def initialize *cards
     @cards = cards
@@ -42,7 +39,7 @@ class Hand
   end
 
   def name
-    value_pair = self.class.names.find { |_, range| range === value }
+    value_pair = Names.find { |_, range| range === value }
     return unless value_pair
     value_pair.first
   end
@@ -72,9 +69,7 @@ class Hand
   def set_extra_cards
     cards = face_values
     to_delete = face_value_counts.select { |_, count| count >= 2 }
-    to_delete.keys.each do |face_value|
-      cards.delete(face_value)
-    end
+    to_delete.keys.each { |face_value| cards.delete face_value }
     extra_cards.cards = cards
   end
 
@@ -108,7 +103,7 @@ class Hand
   end
 
   def flush
-    return face_values.max + 60 if suit_values.uniq.size == 1
+    face_values.max + 60 if suit_values.uniq.size == 1
   end
 
   def full_house
@@ -125,8 +120,7 @@ class Hand
   end
 
   def straight_flush
-    if straight == 55 && flush
-      101
+    if straight == 55 && flush then 101
     elsif flush && straight
       face_values.max + 96
     end
@@ -141,6 +135,6 @@ class Hand
   end
 
   def face_value_counts
-    face_values.each_with_object(Hash.new(0)) { |v, c| c[v] += 1 }
+    face_values.each_with_object(Hash.new 0) { |v, c| c[v] += 1 }
   end
 end

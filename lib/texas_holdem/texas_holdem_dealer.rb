@@ -22,29 +22,24 @@ class TexasHoldemDealer
 
   private
 
+  def round(deal_amt, target=@table)
+	@deck.deal deal_amt, target
+	display_cards
+	bet
+  end
+
   def hole_cards
-    @deck.deal 2, *@currently_in_game
-    display_cards
-    bet
+    round 2, *@currently_in_game
   end
 
   def the_flop
-    @deck.deal 3, @table
-    display_cards
-    bet
+    round 3
   end
 
   def the_turn
-    @deck.deal 1, @table
-    display_cards
-    bet
+    round 1
   end
-
-  def the_river
-    @deck.deal 1, @table
-    display_cards
-    bet
-  end
+  alias the_river the_turn
 
   def determine_winner
     winning_player = @table
@@ -56,9 +51,7 @@ class TexasHoldemDealer
         winning_hand = combined_hand
       end
     end
-    award = @pot.award_pot winning_player
-    hand_name = evaluator.get_hand_name winning_value
-    puts "#{winning_player.name} wins #{award} with #{hand_name}."
+    puts "#{winning_player.name} wins #{@pot.award_pot winning_player} with #{evaluator.get_hand_name winning_value}."
   end
 
   def display_cards
@@ -73,16 +66,13 @@ class TexasHoldemDealer
           ### --- Betting --- ###
 
 
-  def bet
-    manage_betting_order
-  end
 
   def manage_betting_order
     bets, checks_or_calls = 0, 0
     while @currently_in_game.size > 1 && bets + checks_or_calls < @currently_in_game.size
       player = @currently_in_game.shift
-      player_bet = get_bet_value(player)
-      if player_bet.is_a?(Fixnum)
+      player_bet = get_bet_value player
+      if player_bet.is_a? Fixnum
         bets, checks_or_calls = 1, 0
         @pot.total_bet += player.get_chips(player_bet)
       elsif player_bet == "fold"
@@ -98,10 +88,10 @@ class TexasHoldemDealer
     end
     reset_bets
   end
-
+  alias bet manage_betting_order
   def get_bet_value(player)
     bet = 0
-    while true
+    loop do
       response = get_bet(player)
       if response == "fold"
         break

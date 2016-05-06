@@ -1,12 +1,13 @@
 require_relative './deck.rb'
 
-class HandEvaluator
+module HandEvaluator
+  module_function
   def evaluate_hands(hand, table)
-    suits = []
-    faces = []
+    suits = Array.new
+    faces = Array.new
     hand_value = -1
     winning_hand = []
-    combinations = [[hand[0]], [hand[1]], hand]
+    combinations = [[hand.first], [hand[1]], hand]
     combinations.each do |player_cards|
       value, hand = get_all_card_combinations(player_cards, table)
       hand_value, winning_hand = value, hand if value > hand_value
@@ -17,9 +18,9 @@ class HandEvaluator
   def get_hand_value(hand)
     faces = hand.map(&:face)
     suits = hand.map(&:suit)
-    get_face_values(faces)
-    get_suit_values(suits)
-    multiples_eval = check_for_multiples(faces)
+    get_face_values faces
+    get_suit_values suits
+    multiples_eval = check_for_multiples faces
     flush_eval = check_for_flush(suits.uniq)
     straight_eval = check_for_straight(faces)
     straight_flush = (straight_eval > 0 && flush_eval > 0) ? 168000 + straight_eval : -1
@@ -44,24 +45,20 @@ class HandEvaluator
     10.times do ||
       hand = [player_cards[0], player_cards[1]]
       if z == 4 && y == 3 && x == 2
-        hand += [table[x], table[y], table[z]]
-        value = get_hand_value(hand)
-        hand_value, winning_hand = value, hand if value > hand_value
+        hand += [ table[x], table[y], table[z] ] 
+        hand_value, winning_hand = value, hand if get_hand_value(hand) > hand_value
         break
       elsif z == 4 && y == 3
-        hand += [table[x], table[y], table[z]]
-        value = get_hand_value(hand)
-        hand_value, winning_hand = value, hand if value > hand_value
+        hand += [table[x], table[y], table[z]] 
+        hand_value, winning_hand = value, hand if get_hand_value(hand) > hand_value
         x += 1; y = x + 1; z = y + 1;
       elsif z == 4
         hand += [table[x], table[y], table[z]]
-        value = get_hand_value(hand)
-        hand_value, winning_hand = value, hand if value > hand_value
+        hand_value, winning_hand = value, hand if get_hand_value(hand) > hand_value
         y += 1; z = y + 1;
       else
         hand += [table[x], table[y], table[z]]
-        value = get_hand_value(hand)
-        hand_value, winning_hand = value, hand if value > hand_value
+        hand_value, winning_hand = value, hand if get_hand_value(hand) > hand_value
         z += 1;
       end
     end
@@ -73,13 +70,9 @@ class HandEvaluator
     winning_hand = []
     #There are 5 total combinations, make situational in case I need to call in dif circumstance
     (0..4).each do |skip_index|
-      hand = [player_cards[0]]
-      (0..4).each do |current_index|
-        if current_index != skip_index
-          hand << table[current_index]
-        end
-      end
-      value = get_hand_value(hand)
+      hand = [player_cards.first]
+      (0..4).each { |current_index| hand << table[current_index] unless current_index == skip_index }
+      value = get_hand_value hand
       hand_value, winning_hand = value, hand if value > hand_value
     end
     [hand_value, winning_hand]
@@ -90,24 +83,21 @@ class HandEvaluator
     multiples.uniq!
     if multiples.size == 1
       case number = faces.count(multiples[0])
-      when 2
-        score("Pair", multiples[0])
-      when 3
-        score("Three of a Kind", multiples[0])
-      when 4
-        score("Four of a Kind", multiples[0])
+      when 2 then score("Pair", multiples[0])
+      when 3 then score("Three of a Kind", multiples[0])
+      when 4 then score("Four of a Kind", multiples[0])
       else
         "You should never be here!"
       end
     elsif multiples.size == 2
-      number = faces.count(multiples[0])
+      number = faces.count(multiples.first)
       number2 = faces.count(multiples[1])
       if number == 2 && number2 == 3
         score("Full House", multiples[1], multiples[0])
       elsif number == 3 && number2 == 2
-        score("Full House", multiples[0], multiples[1])
+        score("Full House", multiples.first, multiples[1])
       else
-        score("Two Pair", multiples[0], multiples[1])
+        score("Two Pair", multiples.first, multiples[1])
       end
     else
       -1
@@ -116,14 +106,14 @@ class HandEvaluator
 
   def check_for_flush(suits)
     if suits.size == 1
-      score("Flush", suits[0])
+      score("Flush", suits.first)
     else
       -1
     end
   end
 
   def check_for_straight(faces)
-    if faces.sort.each_cons(2).all? { |x,y| y == x + 1 }
+    if faces.sort.each_cons(2).all? { |x, y| y == x + 1 }
       score("Straight", faces[4])
     elsif faces == [2, 3, 4, 5, 14]
       score("Straight", faces[3])
@@ -134,20 +124,13 @@ class HandEvaluator
 
   def score(hand, *args)
     case hand
-    when "Pair"
-      (args[0] * 10) #Range: 20-140
-    when "Two Pair"
-      (args[0] + 13) * 10 + args[1] #Range: 153-274
-    when "Three of a Kind"
-      (1 + args[0]) * 100 #Range: 300-1500
-    when "Straight"
-      args[0] * 400 #Range: 2000-5600
-    when "Flush"
-      5800
-    when "Full House"
-      full_house = (1 + args[0]) * 2000 + (args[1] * 10) #Range: 6030-30130
-    when "Four of a Kind"
-      (2 + args[0]) * 10000 #Range: 40000 - 160000
+    when "Pair" then (args[0] * 10) #Range: 20-140
+    when "Two Pair" then (args[0] + 13) * 10 + args[1] #Range: 153-274
+    when "Three of a Kind" then (1 + args[0]) * 100 #Range: 300-1500
+    when "Straight" then args[0] * 400 #Range: 2000-5600
+    when "Flush" then 5800
+    when "Full House" then full_house = (1 + args.first) * 2000 + (args[1] * 10) #Range: 6030-30130
+    when "Four of a Kind" then (2 + args[0]) * 10000 #Range: 40000 - 160000
     else
       puts "You should never be here!"
     end

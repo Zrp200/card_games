@@ -2,7 +2,8 @@ require_relative './card'
 
 class Deck
   def initialize
-    @cards = new_deck
+    @cards = Card::Suits.flat_map { |suit| Card::Faces.map { |face| Card.new face, suit } }
+    @cards.shuffle! # Might as well shuffle it here
   end
 
   def deal count, *players
@@ -12,20 +13,7 @@ class Deck
   private
 
   def deal_one_to player
-    return unless card = @cards.sample
+    return unless card = @cards.shift
     player.hand << card
-    @cards.delete card
-  end
-
-  def faces
-    Card.faces
-  end
-
-  def new_deck
-    suits.flat_map { |suit| faces.map { |face| Card.new face, suit } }
-  end
-
-  def suits
-    Card.suits
   end
 end
