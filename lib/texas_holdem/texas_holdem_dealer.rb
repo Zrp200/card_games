@@ -56,14 +56,9 @@ class TexasHoldemDealer
         winning_hand = combined_hand
       end
     end
-<<<<<<< HEAD
-    award = @bet_manager.award_pot winning_player
-    puts "#{winning_player.name} wins #{award} with #{winning_hand.name}."
-=======
     award = @pot.award_pot winning_player
     hand_name = evaluator.get_hand_name winning_value
     puts "#{winning_player.name} wins #{award} with #{hand_name}."
->>>>>>> e537aa73d66750111afed197f595395cd2664eef
   end
 
   def display_cards

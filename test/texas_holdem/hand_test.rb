@@ -248,7 +248,6 @@ class HandTest < Minitest::Test
   end
 
   def test_third_high_card_determines_winner
-    skip
     higher = Hand.new Card.new(:two  , :hearts  ),
                       Card.new(:seven, :hearts  ),
                       Card.new(:eight, :spades  ),
@@ -263,7 +262,6 @@ class HandTest < Minitest::Test
   end
 
   def test_fourth_high_card_determines_winner
-    skip
     higher = Hand.new Card.new(:two  , :hearts  ),
                       Card.new(:seven, :hearts  ),
                       Card.new(:eight, :spades  ),
@@ -278,7 +276,6 @@ class HandTest < Minitest::Test
   end
 
   def test_high_card_wins_if_equal_pair
-    skip
     higher = Hand.new Card.new(:two  , :hearts  ),
                       Card.new(:seven, :hearts  ),
                       Card.new(:seven, :spades  ),
@@ -293,7 +290,6 @@ class HandTest < Minitest::Test
   end
 
   def test_high_card_wins_if_equal_pair2
-    skip
     higher = Hand.new Card.new(:nine , :hearts  ),
                       Card.new(:seven, :hearts  ),
                       Card.new(:seven, :spades  ),
@@ -308,7 +304,6 @@ class HandTest < Minitest::Test
   end
 
   def test_higher_low_pair_wins_if_equal_high_pair
-    skip
     higher = Hand.new Card.new(:three, :hearts  ),
                       Card.new(:seven, :hearts  ),
                       Card.new(:seven, :spades  ),
@@ -319,6 +314,90 @@ class HandTest < Minitest::Test
                      Card.new(:seven, :clubs   ),
                      Card.new(:two  , :clubs   ),
                      Card.new(:jack , :diamonds)
+    assert(higher > lower)
+  end
+
+  def test_high_card_wins_if_equal_two_pair
+    higher = Hand.new Card.new(:three, :hearts  ),
+                      Card.new(:seven, :hearts  ),
+                      Card.new(:seven, :spades  ),
+                      Card.new(:three, :spades  ),
+                      Card.new(:king , :diamonds)
+    lower = Hand.new Card.new(:three, :diamonds),
+                     Card.new(:seven, :spades  ),
+                     Card.new(:seven, :clubs   ),
+                     Card.new(:three, :clubs   ),
+                     Card.new(:jack , :diamonds)
+    assert(higher > lower)
+  end
+
+  def test_high_card_wins_if_equal_trips
+    higher = Hand.new Card.new(:four, :hearts  ),
+                      Card.new(:five, :hearts  ),
+                      Card.new(:five, :spades  ),
+                      Card.new(:five, :spades  ),
+                      Card.new(:ace , :diamonds)
+    lower = Hand.new Card.new(:jack, :diamonds),
+                     Card.new(:five, :clubs   ),
+                     Card.new(:five, :clubs   ),
+                     Card.new(:five, :clubs   ),
+                     Card.new(:king, :hearts  )
+    assert(higher > lower)
+  end
+
+  def test_second_high_card_wins_if_equal_trips
+    higher = Hand.new Card.new(:jack , :hearts  ),
+                      Card.new(:three, :hearts  ),
+                      Card.new(:three, :spades  ),
+                      Card.new(:three, :spades  ),
+                      Card.new(:king , :diamonds)
+    lower = Hand.new Card.new(:four , :diamonds),
+                     Card.new(:three, :clubs   ),
+                     Card.new(:three, :clubs   ),
+                     Card.new(:three, :clubs   ),
+                     Card.new(:king , :hearts  )
+    assert(higher > lower)
+  end
+
+  def test_flush_with_higher_cards_wins1
+    higher = Hand.new Card.new(:four, :spades),
+                      Card.new(:two , :spades),
+                      Card.new(:five, :spades),
+                      Card.new(:jack, :spades),
+                      Card.new(:ace , :spades)
+    lower = Hand.new Card.new(:two  , :spades),
+                     Card.new(:eight, :spades),
+                     Card.new(:nine , :spades),
+                     Card.new(:three, :spades),
+                     Card.new(:ace  , :spades)
+    assert(higher > lower)
+  end
+
+  def test_flush_with_higher_cards_wins2
+    higher = Hand.new Card.new(:four, :spades),
+                      Card.new(:two , :spades),
+                      Card.new(:five, :spades),
+                      Card.new(:jack, :spades),
+                      Card.new(:ace , :spades)
+    lower = Hand.new Card.new(:two  , :spades),
+                     Card.new(:five , :spades),
+                     Card.new(:jack , :spades),
+                     Card.new(:three, :spades),
+                     Card.new(:ace  , :spades)
+    assert(higher > lower)
+  end
+
+  def test_higher_second_pair_wins_with_full_house
+    higher = Hand.new Card.new(:ace , :hearts  ),
+                      Card.new(:five, :hearts  ),
+                      Card.new(:five, :spades  ),
+                      Card.new(:ace , :spades  ),
+                      Card.new(:ace , :diamonds)
+    lower = Hand.new Card.new(:ace  , :diamonds),
+                     Card.new(:three, :clubs   ),
+                     Card.new(:three, :clubs   ),
+                     Card.new(:ace  , :clubs   ),
+                     Card.new(:ace  , :hearts  )
     assert(higher > lower)
   end
 end

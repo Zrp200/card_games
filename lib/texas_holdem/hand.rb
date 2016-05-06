@@ -5,29 +5,16 @@ class Hand
 
   attr_reader :cards, :extra_cards
 
-
-  #[['High Card'       , 2..14   ],
-  #     ['a Pair'          , 15..27  ],
-  #     ['Two Pair'        , 28..40  ], 28/28 = 1; 40/28
-  #     ['Three of a Kind' , 41..53  ],
-  #     ['a Straight'      , 54..63  ],
-  #     ['a Flush'         , 64..73  ],
-  #     ['a Full House'    , 74..86  ], #1-168 combos if calc with pair
-  #     ['Four of a Kind'  , 87..99  ],
-  #     ['a Straight Flush', 100..108],
-  #     ['a Royal Flush'   , 109     ]]
-
   class << self
     def names
-      [['Returning Wrong Val', -1..1],
-       ['High Card'       , 2..14   ],
+      [['High Card'       , 2..14   ],
        ['a Pair'          , 15..27  ],
        ['Two Pair'        , 28..41  ],
        ['Three of a Kind' , 42..54  ],
        ['a Straight'      , 55..64  ],
        ['a Flush'         , 65..74  ],
        ['a Full House'    , 75..87  ],
-       ['Four of a Kind'  , 88..100  ],
+       ['Four of a Kind'  , 88..100 ],
        ['a Straight Flush', 101..109],
        ['a Royal Flush'   , 110     ]]
     end
@@ -68,15 +55,6 @@ class Hand
     "#{cards.map(&:to_s)}"
   end
 
-  def set_extra_cards
-    cards = face_values
-    to_delete = face_value_counts.select { |_, count| count >= 2 }
-    to_delete.keys.each do |face_value|
-      cards.delete(face_value)
-    end
-    extra_cards.cards = cards
-  end
-
   protected
 
   def value
@@ -89,6 +67,15 @@ class Hand
     return two_pair if two_pair
     return pair if pair
     high_card
+  end
+
+  def set_extra_cards
+    cards = face_values
+    to_delete = face_value_counts.select { |_, count| count >= 2 }
+    to_delete.keys.each do |face_value|
+      cards.delete(face_value)
+    end
+    extra_cards.cards = cards
   end
 
   private
